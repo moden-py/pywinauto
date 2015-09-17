@@ -72,22 +72,26 @@ class MenuItemNotEnabled(RuntimeError):
 
 
 class MenuInaccessible(RuntimeError):
-    """
-    Raised when a menu has handle but inaccessible
-    """
+
+    """Raised when a menu has handle but inaccessible."""
     pass
 
 
 def raise_if_inaccessible(method):
+    """Decorator for Menu instance methods"""
+
     def check(instance, *args, **kwargs):
-            if instance.inaccessible:
-                raise MenuInaccessible
-            else:
-                return method(instance, *args, **kwargs)
+        """Check if the instance is accessible"""
+
+        if instance.inaccessible:
+            raise MenuInaccessible
+        else:
+            return method(instance, *args, **kwargs)
     return check
 
 
 class MenuItem(object):
+
     """Wrap a menu item"""
 
     def __init__(self, ctrl, menu, index, on_main_menu = False):
@@ -396,7 +400,8 @@ class Menu(object):
         except win32gui.error:
             self.inaccessible = True
         else:
-            menu_info.dwStyle, menu_info.cyMax, menu_info.hbrBack, menu_info.dwContextHelpID, menu_info.dwMenuData = win32gui_struct.UnpackMENUINFO(buf)
+            menu_info.dwStyle, menu_info.cyMax, menu_info.hbrBack, menu_info.dwContextHelpID,\
+            menu_info.dwMenuData = win32gui_struct.UnpackMENUINFO(buf)
 
             if menu_info.dwStyle & win32defines.MNS_NOTIFYBYPOS:
                 self.COMMAND = win32defines.WM_MENUCOMMAND

@@ -497,6 +497,7 @@ class Menu(object):
 
         path_items.append(best_item)
 
+
         # if there are more parts - then get the next level
         if parts[1:]:
             if appdata:

@@ -44,9 +44,13 @@ Timings.window_find_timeout = 3
 Timings.closeclick_dialog_close_wait = .5
 
 mfc_samples_folder = os.path.join(
-   os.path.dirname(__file__), r"..\..\apps\MFC_samples")
+    os.path.dirname(__file__), r"..\..\apps\MFC_samples")
+MFC_tutorial_folder = os.path.join(
+    os.path.dirname(__file__), r"..\..\apps\MFC_tutorial")
+
 if is_x64_Python():
     mfc_samples_folder = os.path.join(mfc_samples_folder, 'x64')
+    MFC_tutorial_folder = os.path.join(MFC_tutorial_folder, 'x64')
 
 
 class ButtonTestCases(unittest.TestCase):
@@ -152,8 +156,34 @@ class ButtonTestCases(unittest.TestCase):
         self.assertEquals(self.calc.Radians.GetCheckState(), 1)
 
 
+class ButtonOwnerdrawTestCases(unittest.TestCase):
+
+    """Unit tests for the ComboBoxWrapper(ownerdraw button)"""
+
+    def setUp(self):
+
+        """Start the sample application. Open a tab with ownerdraw button."""
+
+        # start the application
+        self.app = Application().Start(os.path.join(mfc_samples_folder, u"CmnCtrl3.exe"))
+        # open the needed tab
+        self.app.active_().TabControl.Select(1)
+
+    def tearDown(self):
+
+        """Close the application after tests"""
+
+        self.app.kill_()
+
+    def test_NeedsImageProp(self):
+
+        """test whether an image needs to be saved with the properties"""
+        self.assertEquals(self.app.active_().Button2._NeedsImageProp, True)
+
+
 class ComboBoxTestCases(unittest.TestCase):
-    "Unit tests for the ComboBoxWrapper class"
+
+    """Unit tests for the ComboBoxWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
@@ -237,16 +267,6 @@ class ComboBoxTestCases(unittest.TestCase):
         self.ctrl.ItemData(1)
         self.ctrl.ItemData("Right (UDS_ALIGNRIGHT)")
         self.ctrl.ItemData(self.ctrl.ItemCount() - 1)
-
-#
-#    def testTexts(self):
-#        pass
-#
-
-MFC_tutorial_folder = os.path.join(
-   os.path.dirname(__file__), r"..\..\apps\MFC_tutorial")
-if is_x64_Python():
-    MFC_tutorial_folder = os.path.join(MFC_tutorial_folder, 'x64')
 
 
 class ListBoxTestCases(unittest.TestCase):

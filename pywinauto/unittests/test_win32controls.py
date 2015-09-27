@@ -95,8 +95,11 @@ class ButtonTestCases(unittest.TestCase):
                 getattr(self.calc.Degrees, prop_name)(), props[prop_name])
 
     def test_NeedsImageProp(self):
-        "test whether an image needs to be saved with the properties"
+
+        """test whether an image needs to be saved with the properties"""
+
         self.assertEquals(self.calc.Button5._NeedsImageProp, False)
+        self.assertNotIn('Image', self.calc.Button5.GetProperties())
 
     def testFriendlyClass(self):
         "Test the FriendlyClassName method"
@@ -178,7 +181,10 @@ class ButtonOwnerdrawTestCases(unittest.TestCase):
     def test_NeedsImageProp(self):
 
         """test whether an image needs to be saved with the properties"""
-        self.assertEquals(self.app.active_().Button2._NeedsImageProp, True)
+
+        active_window = self.app.active_()
+        self.assertEquals(active_window.Button2._NeedsImageProp, True)
+        self.assertIn('Image', active_window.Button2.GetProperties())
 
 
 class ComboBoxTestCases(unittest.TestCase):
@@ -665,6 +671,42 @@ class PopupMenuTestCases(unittest.TestCase):
         "Ensure that the menu handle is returned"
         handle = self.popup._menu_handle()
         self.assertNotEquals(0, handle)
+
+
+class StaticTestCases(unittest.TestCase):
+
+    """Unit tests for the StaticWrapper class"""
+
+    def setUp(self):
+
+        """Start the sample application. Open a tab with ownerdraw button."""
+
+        # start the application
+        self.app = Application().Start(os.path.join(mfc_samples_folder, u"RebarTest.exe"))
+        # open the Help dailog
+        self.app.active_().TypeKeys('%h{ENTER}')
+
+    def tearDown(self):
+
+        """Close the application after tests"""
+
+        self.app.kill_()
+
+    def test_NeedsImageProp(self):
+
+        """test a regular static has no the image property"""
+
+        active_window = self.app.active_()
+        self.assertEquals(active_window.Static2._NeedsImageProp, False)
+        self.assertNotIn('Image', active_window.Static2.GetProperties())
+
+    def test_NeedsImageProp_ownerdraw(self):
+
+        """test whether an image needs to be saved with the properties"""
+
+        active_window = self.app.active_()
+        self.assertEquals(active_window.Static._NeedsImageProp, True)
+        self.assertIn('Image', active_window.Static.GetProperties())
 
 
 if __name__ == "__main__":

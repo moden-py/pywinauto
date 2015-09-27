@@ -94,7 +94,7 @@ class ButtonTestCases(unittest.TestCase):
             self.assertEquals(
                 getattr(self.calc.Degrees, prop_name)(), props[prop_name])
 
-    def test_set_if_needs_image(self):
+    def test_NeedsImageProp(self):
         "test whether an image needs to be saved with the properties"
         self.assertEquals(self.calc.Button5._NeedsImageProp, False)
 

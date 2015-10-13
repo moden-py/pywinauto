@@ -110,29 +110,33 @@ class ApplicationWarningTestCases(unittest.TestCase):
     def testDepricatedConnectWarning(self):
         warn_text = "connect_()/Connect_() methods are deprecated,"
         depricated_connect_methods = ('connect_', 'connect_')
-        #warnings.filterwarnings('always', category=PendingDeprecationWarning, append=True)
+        # warnings.filterwarnings('always', category=PendingDeprecationWarning,
+        #                         append=True)
         with warnings.catch_warnings(record=True) as warns:
             app = Application().start(self.sample_exe)
             for depricated_method in depricated_connect_methods:
-                app2 = getattr(Application(), depricated_method)(path=self.sample_exe)
+                app2 = getattr(Application(),
+                               depricated_method)(path=self.sample_exe)
             app.kill_()
 
         self.assertEquals(len(depricated_connect_methods), len(warns))
         self.assertEquals(warns[-1].category, PendingDeprecationWarning)
-        self.assertEquals(warn_text in warns[-1].message.message, True)
+        self.assertEquals(warn_text in str(warns[-1].message), True)
 
     def testDepricatedStartWarning(self):
         warn_text = "start_()/Start_() methods are deprecated,"
         depricated_start_methods = ('start_', 'Start_')
-        #warnings.filterwarnings('always', category=PendingDeprecationWarning, append=True)
+        # warnings.filterwarnings('always', category=PendingDeprecationWarning,
+        #                         append=True)
         with warnings.catch_warnings(record=True) as warns:
             for depricated_method in depricated_start_methods:
-                app = getattr(Application(), depricated_method)(self.sample_exe)
+                app = getattr(Application(),
+                              depricated_method)(self.sample_exe)
                 app.kill_()
 
         self.assertEquals(len(depricated_start_methods), len(warns))
         self.assertEquals(warns[-1].category, PendingDeprecationWarning)
-        self.assertEquals(warn_text in warns[-1].message.message, True)
+        self.assertEquals(warn_text in str(warns[-1].message), True)
 
 
 class ApplicationTestCases(unittest.TestCase):

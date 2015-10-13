@@ -787,15 +787,16 @@ class Application(object):
 
     def __connect(self, **kwargs):
         """
-        Deprecated methods handler. Performs DeprecationWarning before calling the .connect
+        Deprecated methods handler. Performs DeprecationWarning before calling
+        the .connect
         Should be also removed in 0.6.X
         """
         warnings.warn(
-            """
-            connect_()/Connect_()/__connect() methods are deprecated, please switch to instance method connect().
-            Connect() is an alias to the connect() method."
-            Please note that both Connect() and connect() are instance methods.
-            """, DeprecationWarning)
+            "connect_()/Connect_()/__connect() methods are deprecated, "
+            "please switch to instance method connect(). "
+            "Connect() is an alias to the connect() method. "
+            "Please note that both Connect() and connect() "
+            "are instance methods.", DeprecationWarning)
         return self.connect(**kwargs)
 
     connect_ = __connect  # A deprecated name. Should be removed in 0.6.X
@@ -815,7 +816,7 @@ class Application(object):
         elif 'handle' in kwargs:
 
             if not handleprops.iswindow(kwargs['handle']):
-                message = "Invalid handle 0x%x passed to connect_()"% (
+                message = "Invalid handle 0x%x passed to connect()" % (
                     kwargs['handle'])
                 raise RuntimeError(message)
 
@@ -844,21 +845,23 @@ class Application(object):
 
     def __start(self, *args, **kwargs):
         """
-        Deprecated methods handler. Performs DeprecationWarning before calling the .start
+        Deprecated methods handler. Performs DeprecationWarning before
+        calling the .start
         Should be also removed in 0.6.X
         """
         warnings.warn(
-            """
-            start_()/Start_()/__start() methods are deprecated, please switch to instance method start().
-            Start() is an alias to the start() method."
-            Please note that both Start() and start() are instance methods.
-            """, DeprecationWarning)
+            "start_()/Start_()/__start() methods are deprecated, "
+            "please switch to instance method start(). "
+            "Start() is an alias to the start() method. "
+            "Please note that both Start() and start() are instance methods.",
+            DeprecationWarning)
         return self.start(*args, **kwargs)
 
     start_ = __start  # A deprecated name. Should be removed in 0.6.X
     Start_ = __start  # A deprecated name. Should be removed in 0.6.X
 
-    def start(self, cmd_line, timeout=None, retry_interval=None, create_new_console=False, wait_for_idle=True):
+    def start(self, cmd_line, timeout=None, retry_interval=None,
+              create_new_console=False, wait_for_idle=True):
         """
         Starts the application giving in cmd_line
         """
@@ -947,8 +950,8 @@ class Application(object):
     def is64bit(self):
         "Return True if running process is 64-bit"
         if not self.process:
-            raise AppNotConnected("Please use start_ or connect_ before "
-                "trying anything else")
+            raise AppNotConnected("Please use start or connect before trying "
+                                  "anything else")
         return handleprops.is64bitprocess(self.process)
 
     def CPUUsage(self, interval = None):
@@ -996,8 +999,8 @@ class Application(object):
     def top_window_(self):
         "Return the current top window of the application"
         if not self.process:
-            raise AppNotConnected("Please use start_ or connect_ before "
-                "trying anything else")
+            raise AppNotConnected("Please use start or connect before trying "
+                                  "anything else")
 
         time.sleep(Timings.window_find_timeout)
         # very simple
@@ -1014,8 +1017,8 @@ class Application(object):
     def active_(self):
         "Return the active window of the application"
         if not self.process:
-            raise AppNotConnected("Please use start_ or connect_ before "
-                "trying anything else")
+            raise AppNotConnected("Please use start or connect before trying "
+                                  "anything else")
 
         time.sleep(Timings.window_find_timeout)
         # very simple
@@ -1037,8 +1040,8 @@ class Application(object):
         """
 
         if not self.process:
-            raise AppNotConnected("Please use start_ or connect_ before "
-                "trying anything else")
+            raise AppNotConnected("Please use start or connect before trying "
+                                  "anything else")
 
         if 'visible_only' not in kwargs:
             kwargs['visible_only'] = False

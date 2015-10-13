@@ -785,36 +785,83 @@ class Application(object):
                 self.match_history = pickle.load(datafile)
             self.use_history = True
 
-    def __start(*args, **kwargs):
-        "Convenience static method that calls start"
+    def __connect(self, **kwargs):
+        """
+        Deprecated methods handler. Performs DeprecationWarning before calling the .connect
+        Should be also removed in 0.6.X
+        """
         warnings.warn(
-            "Class/Static methods Application.start(), application.start() "
-            "are deprecated, please switch to instance method connect_. "
-            "Please note that in a future release that start_() will be "
-            "renamed to Start().",
-            DeprecationWarning)
-        warnings.warn(
-            "Class/StaticMethods Start, start deprecated, please switch "
-            "to instance method Start",
-            DeprecationWarning)
-        return Application().start_(*args, **kwargs)
-    start = staticmethod(__start)
-    Start = start
+            """
+            connect_()/Connect_()/__connect() methods are deprecated, please switch to instance method connect().
+            Connect() is an alias to the connect() method."
+            Please note that both Connect() and connect() are instance methods.
+            """, DeprecationWarning)
+        return self.connect(**kwargs)
 
-    def __connect(*args, **kwargs):
-        "Convenience static method that calls connect"
-        warnings.warn(
-            "Class/Static methods Application.Connect(), application.connect() "
-            "are deprecated, please switch to instance method connect_. "
-            "Please note that in a future release that connect_() will be "
-            "renamed to Connect().",
-            DeprecationWarning)
-        return Application().connect_(*args, **kwargs)
-    connect = staticmethod(__connect)
+    connect_ = __connect  # A deprecated name. Should be removed in 0.6.X
+    Connect_ = __connect  # A deprecated name. Should be removed in 0.6.X
+
+    def connect(self, **kwargs):
+        """
+        Connects to an already running process
+        """
+
+        connected = False
+        if 'process' in kwargs:
+            self.process = kwargs['process']
+            assert_valid_process(self.process)
+            connected = True
+
+        elif 'handle' in kwargs:
+
+            if not handleprops.iswindow(kwargs['handle']):
+                message = "Invalid handle 0x%x passed to connect_()"% (
+                    kwargs['handle'])
+                raise RuntimeError(message)
+
+            self.process = handleprops.processid(kwargs['handle'])
+
+            connected = True
+
+        elif 'path' in kwargs:
+            self.process = process_from_module(kwargs['path'])
+            connected = True
+
+        elif kwargs:
+            handle = findwindows.find_window(**kwargs)
+            self.process = handleprops.processid(handle)
+            connected = True
+
+        if not connected:
+            raise RuntimeError(
+                "You must specify one of process, handle or path")
+
+        self.__warn_incorrect_bitness()
+
+        return self
+
     Connect = connect
 
-    def start_(self, cmd_line, timeout = None, retry_interval = None, create_new_console = False, wait_for_idle = True):
-        "Starts the application giving in cmd_line"
+    def __start(self, *args, **kwargs):
+        """
+        Deprecated methods handler. Performs DeprecationWarning before calling the .start
+        Should be also removed in 0.6.X
+        """
+        warnings.warn(
+            """
+            start_()/Start_()/__start() methods are deprecated, please switch to instance method start().
+            Start() is an alias to the start() method."
+            Please note that both Start() and start() are instance methods.
+            """, DeprecationWarning)
+        return self.start(*args, **kwargs)
+
+    start_ = __start  # A deprecated name. Should be removed in 0.6.X
+    Start_ = __start  # A deprecated name. Should be removed in 0.6.X
+
+    def start(self, cmd_line, timeout=None, retry_interval=None, create_new_console=False, wait_for_idle=True):
+        """
+        Starts the application giving in cmd_line
+        """
 
         # try to parse executable name and check it has correct bitness
         if '.exe' in cmd_line:
@@ -882,7 +929,7 @@ class Application(object):
 
         return self
 
-    Start_ = start_
+    Start = start
 
     def __warn_incorrect_bitness(self):
         if self.is64bit() != is_x64_Python():
@@ -896,45 +943,6 @@ class Application(object):
                 warnings.warn(
                     "64-bit application should be automated using 64-bit Python (you use 32-bit Python)",
                     UserWarning)
-
-
-    def connect_(self, **kwargs):
-        "Connects to an already running process"
-
-        connected = False
-        if 'process' in kwargs:
-            self.process = kwargs['process']
-            assert_valid_process(self.process)
-            connected = True
-
-        elif 'handle' in kwargs:
-
-            if not handleprops.iswindow(kwargs['handle']):
-                message = "Invalid handle 0x%x passed to connect_()"% (
-                    kwargs['handle'])
-                raise RuntimeError(message)
-
-            self.process = handleprops.processid(kwargs['handle'])
-
-            connected = True
-
-        elif 'path' in kwargs:
-            self.process = process_from_module(kwargs['path'])
-            connected = True
-
-        elif kwargs:
-            handle = findwindows.find_window(**kwargs)
-            self.process = handleprops.processid(handle)
-            connected = True
-
-        if not connected:
-            raise RuntimeError(
-                "You must specify one of process, handle or path")
-
-        self.__warn_incorrect_bitness()
-
-        return self
-    Connect_ = connect_
 
     def is64bit(self):
         "Return True if running process is 64-bit"
@@ -1159,7 +1167,6 @@ class Application(object):
         return killed
 
     kill_ = Kill_
-
 
 
 #=========================================================================

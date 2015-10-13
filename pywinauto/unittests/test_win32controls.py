@@ -28,7 +28,7 @@ from __future__ import unicode_literals
 import os, sys
 import codecs
 sys.path.append(".")
-from pywinauto import XMLHelpers #, six
+from pywinauto import XMLHelpers, win32defines #, six
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.application import Application
 
@@ -54,7 +54,8 @@ if is_x64_Python():
 
 
 class ButtonTestCases(unittest.TestCase):
-    "Unit tests for the ComboBoxWrapper class"
+
+    """Unit tests for the ButtonWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
@@ -99,7 +100,9 @@ class ButtonTestCases(unittest.TestCase):
         """test whether an image needs to be saved with the properties"""
 
         self.assertEquals(self.calc.Button5._NeedsImageProp, False)
-        self.assertNotIn('Image', self.calc.Button5.GetProperties())
+        self.assertEquals('Image' in self.calc.Button5.GetProperties(), False)
+        #self.assertNotIn('Image', self.calc.Button5.GetProperties())
+        # assertIn and assertNotIn are not supported in Python 2.6
 
     def testFriendlyClass(self):
         "Test the FriendlyClassName method"
@@ -159,9 +162,66 @@ class ButtonTestCases(unittest.TestCase):
         self.assertEquals(self.calc.Radians.GetCheckState(), 1)
 
 
+class CheckBoxTests(unittest.TestCase):
+    "Unit tests for the CheckBox specific methods of the ButtonWrapper class"
+
+    def setUp(self):
+        """Start the application set some data and ensure the application
+        is in the state we want it."""
+
+        # start the application
+        self.app = Application()
+        self.app.start_(os.path.join(mfc_samples_folder, u"CmnCtrl1.exe"))
+
+        self.dlg = self.app.Common_Controls_Sample
+        self.tree = self.dlg.TreeView.WrapperObject()
+
+    def tearDown(self):
+        "Close the application after tests"
+        self.app.kill_()
+
+    def testCheckUncheckByClick(self):
+        "test for CheckByClick and UncheckByClick"
+        self.dlg.TVS_HASLINES.CheckByClick()
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_CHECKED)
+        self.assertEquals(self.tree.HasStyle(win32defines.TVS_HASLINES), True)
+        
+        self.dlg.TVS_HASLINES.CheckByClick() # make sure it doesn't uncheck the box unexpectedly
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_CHECKED)
+        
+        self.dlg.TVS_HASLINES.UncheckByClick()
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_UNCHECKED)
+        self.assertEquals(self.tree.HasStyle(win32defines.TVS_HASLINES), False)
+        
+        self.dlg.TVS_HASLINES.UncheckByClick() # make sure it doesn't check the box unexpectedly
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_UNCHECKED)
+
+    def testCheckUncheckByClickInput(self):
+        "test for CheckByClickInput and UncheckByClickInput"
+        self.dlg.TVS_HASLINES.CheckByClickInput()
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_CHECKED)
+        self.assertEquals(self.tree.HasStyle(win32defines.TVS_HASLINES), True)
+        
+        self.dlg.TVS_HASLINES.CheckByClickInput() # make sure it doesn't uncheck the box unexpectedly
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_CHECKED)
+        
+        self.dlg.TVS_HASLINES.UncheckByClickInput()
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_UNCHECKED)
+        self.assertEquals(self.tree.HasStyle(win32defines.TVS_HASLINES), False)
+        
+        self.dlg.TVS_HASLINES.UncheckByClickInput() # make sure it doesn't check the box unexpectedly
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_UNCHECKED)
+
+    def testSetCheckIndeterminate(self):
+        "test for SetCheckIndeterminate"
+        self.dlg.TVS_HASLINES.SetCheckIndeterminate()
+        self.assertEquals(self.dlg.TVS_HASLINES.GetCheckState(), win32defines.BST_CHECKED)
+        # TODO: find an application with the check box that supports indeterminate state (gray-checked)
+
+
 class ButtonOwnerdrawTestCases(unittest.TestCase):
 
-    """Unit tests for the ComboBoxWrapper(ownerdraw button)"""
+    """Unit tests for the ButtonWrapper(ownerdraw button)"""
 
     def setUp(self):
 
@@ -184,7 +244,9 @@ class ButtonOwnerdrawTestCases(unittest.TestCase):
 
         active_window = self.app.active_()
         self.assertEquals(active_window.Button2._NeedsImageProp, True)
-        self.assertIn('Image', active_window.Button2.GetProperties())
+        self.assertEquals('Image' in active_window.Button2.GetProperties(), True)
+        #self.assertIn('Image', active_window.Button2.GetProperties())
+        # assertIn and assertNotIn are not supported in Python 2.6
 
 
 class ComboBoxTestCases(unittest.TestCase):
@@ -256,6 +318,7 @@ class ComboBoxTestCases(unittest.TestCase):
         self.assertEquals(self.ctrl.SelectedIndex(), 0)
         self.ctrl.Select("Left (UDS_ALIGNLEFT)")
         self.assertEquals(self.ctrl.SelectedIndex(), 1)
+        self.assertEquals(self.ctrl.SelectedText(), "Left (UDS_ALIGNLEFT)")
 
         # now do it with a typo
         self.assertRaises(ValueError, self.ctrl.Select, "Right (UDS_ALIGNRIGT)")
@@ -276,7 +339,8 @@ class ComboBoxTestCases(unittest.TestCase):
 
 
 class ListBoxTestCases(unittest.TestCase):
-    "Unit tests for the TreeViewWrapper class"
+
+    """Unit tests for the ListBoxWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
@@ -290,6 +354,7 @@ class ListBoxTestCases(unittest.TestCase):
         self.app.start_(app_path)
 
         self.dlg = self.app.MFC_Tutorial9
+        self.dlg.Wait('ready', timeout=20)
         self.dlg.TypeYourTextEdit.TypeKeys('qqq')
         self.dlg.Add.Click()
         
@@ -312,7 +377,7 @@ class ListBoxTestCases(unittest.TestCase):
         self.app.kill_()
 
     def testGetProperties(self):
-        "Test getting the properties for the listbox control"
+        "Test getting the properties for the list box control"
         props = self.ctrl.GetProperties()
 
         self.assertEquals(
@@ -364,7 +429,8 @@ class ListBoxTestCases(unittest.TestCase):
 
 
 class EditTestCases(unittest.TestCase):
-    "Unit tests for the EditWrapper class"
+
+    """Unit tests for the EditWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
@@ -489,7 +555,8 @@ class EditTestCases(unittest.TestCase):
 
 
 class UnicodeEditTestCases(unittest.TestCase):
-    "Unit tests for the EditWrapper class using Unicode strings"
+
+    """Unit tests for the EditWrapper class using Unicode strings"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
@@ -536,7 +603,8 @@ class UnicodeEditTestCases(unittest.TestCase):
 
 
 class DialogTestCases(unittest.TestCase):
-    "Unit tests for the DialogWrapper class"
+
+    """Unit tests for the DialogWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
@@ -629,9 +697,18 @@ class DialogTestCases(unittest.TestCase):
         self.failIf((rectangle.right - clientarea.right) > 10)
         self.failIf((rectangle.bottom - clientarea.bottom) > 10)
 
+    def testHideFromTaskbar(self):
+        "Test that a dialog can be hidden from the Windows taskbar"
+        self.assertEquals(self.calc.IsInTaskbar(), True)
+        self.calc.HideFromTaskbar()
+        self.assertEquals(self.calc.IsInTaskbar(), False)
+        self.calc.ShowInTaskbar()
+        self.assertEquals(self.calc.IsInTaskbar(), True)
+
 
 class PopupMenuTestCases(unittest.TestCase):
-    "Unit tests for the DialogWrapper class"
+
+    """Unit tests for the PopupMenuWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
@@ -698,7 +775,9 @@ class StaticTestCases(unittest.TestCase):
 
         active_window = self.app.active_()
         self.assertEquals(active_window.Static2._NeedsImageProp, False)
-        self.assertNotIn('Image', active_window.Static2.GetProperties())
+        self.assertEquals('Image' in active_window.Static2.GetProperties(), False)
+        #self.assertNotIn('Image', active_window.Static2.GetProperties())
+        # assertIn and assertNotIn are not supported in Python 2.6
 
     def test_NeedsImageProp_ownerdraw(self):
 
@@ -706,7 +785,9 @@ class StaticTestCases(unittest.TestCase):
 
         active_window = self.app.active_()
         self.assertEquals(active_window.Static._NeedsImageProp, True)
-        self.assertIn('Image', active_window.Static.GetProperties())
+        self.assertEquals('Image' in active_window.Static.GetProperties(), True)
+        #self.assertIn('Image', active_window.Static.GetProperties())
+        # assertIn and assertNotIn are not supported in Python 2.6
 
 
 if __name__ == "__main__":

@@ -197,13 +197,25 @@ class ButtonWrapper(HwndWrapper.HwndWrapper):
 
     #-----------------------------------------------------------
     def CheckByClick(self):
-        "Click the Button control"
+        "Check the CheckBox control by Click() method"
+        if self.GetCheckState() != win32defines.BST_CHECKED:
+            self.Click()
+
+    #-----------------------------------------------------------
+    def UncheckByClick(self):
+        "Uncheck the CheckBox control by Click() method"
+        if self.GetCheckState() != win32defines.BST_UNCHECKED:
+            self.Click()
+
+    #-----------------------------------------------------------
+    def CheckByClickInput(self):
+        "Check the CheckBox control by ClickInput() method"
         if self.GetCheckState() != win32defines.BST_CHECKED:
             self.ClickInput()
 
     #-----------------------------------------------------------
-    def UncheckByClick(self):
-        "Click the Button control"
+    def UncheckByClickInput(self):
+        "Uncheck the CheckBox control by ClickInput() method"
         if self.GetCheckState() != win32defines.BST_UNCHECKED:
             self.ClickInput()
 
@@ -880,6 +892,31 @@ class DialogWrapper(HwndWrapper.HwndWrapper):
         rect = win32structures.RECT(self.Rectangle())
         self.SendMessage(win32defines.WM_NCCALCSIZE, 0, ctypes.byref(rect))
         return rect
+
+    #-----------------------------------------------------------
+    def HideFromTaskbar(self):
+        "Hide the dialog from the Windows taskbar"
+        win32functions.ShowWindow(self, win32defines.SW_HIDE)
+        win32functions.SetWindowLongPtr(self, win32defines.GWL_EXSTYLE, self.ExStyle() | win32defines.WS_EX_TOOLWINDOW)
+        win32functions.ShowWindow(self, win32defines.SW_SHOW)
+
+    #-----------------------------------------------------------
+    def ShowInTaskbar(self):
+        "Show the dialog in the Windows taskbar"
+        win32functions.ShowWindow(self, win32defines.SW_HIDE)
+        win32functions.SetWindowLongPtr(self, win32defines.GWL_EXSTYLE, self.ExStyle() | win32defines.WS_EX_APPWINDOW)
+        win32functions.ShowWindow(self, win32defines.SW_SHOW)
+
+    #-----------------------------------------------------------
+    def IsInTaskbar(self):
+        "Check whether the dialog is shown in the Windows taskbar"
+
+        # Thanks to David Heffernan for the idea: 
+        # http://stackoverflow.com/questions/30933219/hide-window-from-taskbar-without-using-ws-ex-toolwindow
+        # A window is represented in the taskbar if:
+        # It is not owned and does not have the WS_EX_TOOLWINDOW extended style, or
+        # It has the WS_EX_APPWINDOW extended style.
+        return self.HasExStyle(win32defines.WS_EX_APPWINDOW) or (self.Owner() is None and not self.HasExStyle(win32defines.WS_EX_TOOLWINDOW))
 
 #    #-----------------------------------------------------------
 #    def ReadControlsFromXML(self, filename):

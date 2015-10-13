@@ -19,8 +19,24 @@
 #    59 Temple Place,
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
+"""
+Classes that wrap the Windows Common controls
 
-"Classes that wrap the Windows Common controls"
+.. implicitly document some private classes
+.. autoclass:: _toolbar_button
+   :members:
+   :show-inheritance:
+
+.. autoclass:: _treeview_element
+   :members:
+   :show-inheritance:
+
+.. autoclass:: _listview_item
+   :members:
+   :show-inheritance:
+"""
+
+
 from __future__ import absolute_import
 from __future__ import print_function
 
@@ -581,13 +597,15 @@ class ListViewWrapper(HwndWrapper.HwndWrapper):
     def GetItem(self, item_index, subitem_index = 0):
         """Return the item of the list view"
 
-        * **item_index** Can be either the index of the item or a string
+        * **item_index** Can be either an index of the item or a string
           with the text of the item you want returned.
-        * **subitem_index** The 0 based index of the item you want returned.
+        * **subitem_index** A zero based index of the item you want returned.
           Defaults to 0.
         """
 
         return _listview_item(self, item_index, subitem_index)
+
+    Item = GetItem # this is an alias to be consistent with other content elements
 
     #-----------------------------------------------------------
     def Items(self):
@@ -1250,6 +1268,8 @@ class TreeViewWrapper(HwndWrapper.HwndWrapper):
 
         return  current_elem
 
+    Item = GetItem # this is an alias to be consistent with other content elements
+
     #----------------------------------------------------------------
     def Select(self, path):
         "Select the treeview item"
@@ -1513,6 +1533,7 @@ class StatusBarWrapper(HwndWrapper.HwndWrapper):
     windowclasses = [
         "msctls_statusbar32",
         "HSStatusBar",
+        "TStatusBar",
         r"WindowsForms\d*\.msctls_statusbar32\..*"]
 
     #----------------------------------------------------------------
@@ -1864,7 +1885,9 @@ class TabControlWrapper(HwndWrapper.HwndWrapper):
 
 #====================================================================
 class _toolbar_button(object):
-    "Wrapper around Toolbar button (TBBUTTONINFO) items"
+    """
+    Wrapper around Toolbar button (TBBUTTONINFO) items
+    """
     #----------------------------------------------------------------
     def __init__(self, index_, tb_handle):
         "Initialize the item"
@@ -1943,10 +1966,20 @@ class _toolbar_button(object):
 #        self.Check(check = False)
 
     #----------------------------------------------------------------
+    def Text(self):
+        "Return the text of the button"
+        return self.info.text
+
+    #----------------------------------------------------------------
     def Style(self):
         "Return the style of the button"
         return self.toolbar_ctrl.SendMessage(
             win32defines.TB_GETSTYLE, self.info.idCommand)
+
+    #----------------------------------------------------------------
+    def HasStyle(self, style):
+        "Return True if the button has the specified style"
+        return self.Style() & style == style
 
     #----------------------------------------------------------------
     def State(self):
@@ -1957,22 +1990,22 @@ class _toolbar_button(object):
     #----------------------------------------------------------------
     def IsCheckable(self):
         "Return if the button can be checked"
-        return self.Style() & win32defines.TBSTYLE_CHECK
+        return self.HasStyle(win32defines.TBSTYLE_CHECK)
 
     #----------------------------------------------------------------
     def IsPressable(self):
         "Return if the button can be pressed"
-        return self.Style() & win32defines.TBSTYLE_BUTTON
+        return self.HasStyle(win32defines.TBSTYLE_BUTTON)
 
     #----------------------------------------------------------------
     def IsChecked(self):
         "Return if the button is in the checked state"
-        return self.State() & win32defines.TBSTATE_CHECKED
+        return self.State() & win32defines.TBSTATE_CHECKED == win32defines.TBSTATE_CHECKED
 
     #----------------------------------------------------------------
     def IsPressed(self):
         "Return if the button is in the pressed state"
-        return self.State() & win32defines.TBSTATE_PRESSED
+        return self.State() & win32defines.TBSTATE_PRESSED == win32defines.TBSTATE_PRESSED
 
     #----------------------------------------------------------------
     def IsEnabled(self):
@@ -1982,7 +2015,7 @@ class _toolbar_button(object):
         if not self.info.idCommand:
             return False
 
-        return self.State() & win32defines.TBSTATE_ENABLED
+        return self.State() & win32defines.TBSTATE_ENABLED == win32defines.TBSTATE_ENABLED
 
     #----------------------------------------------------------------
     def Click(self, button = "left", pressed = ""):

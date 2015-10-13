@@ -446,12 +446,12 @@ class HwndWrapper(object):
 
     #-----------------------------------------------------------
     def HasStyle(self, style):
-        "Return True if the control has the specified sytle"
+        "Return True if the control has the specified style"
         return handleprops.has_style(self, style)
 
     #-----------------------------------------------------------
     def HasExStyle(self, exstyle):
-        "Return True if the control has the specified extended sytle"
+        "Return True if the control has the specified extended style"
         return handleprops.has_exstyle(self, exstyle)
 
     #-----------------------------------------------------------
@@ -1478,19 +1478,19 @@ class HwndWrapper(object):
             has_closed
         )
 
-        self.actions.log('Closed window "' + window_text + '"')
+        self.actions.log('Closed window "{0}"'.format(window_text))
 
     #-----------------------------------------------------------
     def Maximize(self):
         """Maximize the window"""
         win32functions.ShowWindow(self, win32defines.SW_MAXIMIZE)
-        self.actions.log('Maximized window "' + self.WindowText() + '"')
+        self.actions.log('Maximized window "{0}"'.format(self.WindowText()))
 
     #-----------------------------------------------------------
     def Minimize(self):
         """Minimize the window"""
         win32functions.ShowWindow(self, win32defines.SW_MINIMIZE)
-        self.actions.log('Minimized window "' + self.WindowText() + '"')
+        self.actions.log('Minimized window "{0}"'.format(self.WindowText()))
 
     #-----------------------------------------------------------
     def Restore(self):
@@ -1501,7 +1501,7 @@ class HwndWrapper(object):
         # after the first ShowWindow, and Restored after the 2nd
         win32functions.ShowWindow(self, win32defines.SW_RESTORE)
         win32functions.ShowWindow(self, win32defines.SW_RESTORE)
-        self.actions.log('Restored window "' + self.WindowText() + '"')
+        self.actions.log('Restored window "{0}"'.format(self.WindowText()))
 
 
     #-----------------------------------------------------------
@@ -1827,12 +1827,14 @@ def _perform_click_input(
         SendKeys.VirtualKeyAction(SendKeys.VK_MENU, down = False).Run()
 
     if use_log:
-        message = 'Clicked ' + ctrl.FriendlyClassName() + ' "' + str(ctrl_text) + \
+        if ctrl_text is None:
+            ctrl_text = six.text_type(ctrl_text)
+        message = 'Clicked ' + ctrl.FriendlyClassName() + ' "' + ctrl_text + \
                   '" by ' + str(button) + ' button mouse click (x,y=' + ','.join([str(coord) for coord in coords]) + ')'
         if double:
             message = 'Double-c' + message[1:]
         if button.lower() == 'move':
-            message = 'Moved mouse over ' + ctrl.FriendlyClassName() + ' "' + str(ctrl_text) + \
+            message = 'Moved mouse over ' + ctrl.FriendlyClassName() + ' "' + ctrl_text + \
                   '" to screen point (x,y=' + ','.join([str(coord) for coord in coords]) + ')'
         ActionLogger().log(message)
 

@@ -787,16 +787,17 @@ class Application(object):
 
     def __connect(self, **kwargs):
         """
-        Deprecated methods handler. Performs DeprecationWarning before calling
-        the .connect
-        Should be also removed in 0.6.X
+        Deprecated method. Performs DeprecationWarning before calling
+        the .connect.
+        Should be also removed in 0.6.X.
         """
+        warnings.simplefilter('always', PendingDeprecationWarning)
         warnings.warn(
-            "connect_()/Connect_()/__connect() methods are deprecated, "
+            "connect_()/Connect_() methods are deprecated, "
             "please switch to instance method connect(). "
             "Connect() is an alias to the connect() method. "
             "Please note that both Connect() and connect() "
-            "are instance methods.", DeprecationWarning)
+            "are instance methods.", PendingDeprecationWarning)
         return self.connect(**kwargs)
 
     connect_ = __connect  # A deprecated name. Should be removed in 0.6.X
@@ -845,16 +846,17 @@ class Application(object):
 
     def __start(self, *args, **kwargs):
         """
-        Deprecated methods handler. Performs DeprecationWarning before
-        calling the .start
-        Should be also removed in 0.6.X
+        Deprecated method. Performs DeprecationWarning before
+        calling the .start.
+        Should be also removed in 0.6.X.
         """
+        warnings.simplefilter('always', PendingDeprecationWarning)
         warnings.warn(
-            "start_()/Start_()/__start() methods are deprecated, "
+            "start_()/Start_() methods are deprecated, "
             "please switch to instance method start(). "
             "Start() is an alias to the start() method. "
             "Please note that both Start() and start() are instance methods.",
-            DeprecationWarning)
+            PendingDeprecationWarning)
         return self.start(*args, **kwargs)
 
     start_ = __start  # A deprecated name. Should be removed in 0.6.X

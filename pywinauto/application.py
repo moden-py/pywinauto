@@ -787,8 +787,8 @@ class Application(object):
 
     def __connect(self, **kwargs):
         """
-        Deprecated method. Performs DeprecationWarning before calling
-        the .connect.
+        Deprecated method. Performs PendingDeprecationWarning before calling
+        the .connect().
         Should be also removed in 0.6.X.
         """
         warnings.simplefilter('always', PendingDeprecationWarning)
@@ -846,8 +846,8 @@ class Application(object):
 
     def __start(self, *args, **kwargs):
         """
-        Deprecated method. Performs DeprecationWarning before
-        calling the .start.
+        Deprecated method. Performs PendingDeprecationWarning before
+        calling the .start().
         Should be also removed in 0.6.X.
         """
         warnings.simplefilter('always', PendingDeprecationWarning)

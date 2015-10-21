@@ -761,7 +761,7 @@ class ListViewWrapper(HwndWrapper.HwndWrapper):
 
                 # get the item
                 #yield self.GetItem(item_index, subitem_index) # return iterator
-                items.append(self.GetItem(item_index, subitem_index).ItemData())
+                items.append(self.GetItem(item_index, subitem_index))
 
         return items
 

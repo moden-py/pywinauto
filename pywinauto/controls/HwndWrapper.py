@@ -1570,14 +1570,15 @@ class HwndWrapper(object):
 
         Bring the window to the foreground first if necessary."""
 
-        win32gui.SetForegroundWindow(self.handle)
+        # find the current foreground window
+        cur_foreground = win32functions.GetForegroundWindow()
 
-        # only sleep if we had to change something!
-        time.sleep(Timings.after_setfocus_wait)
+        # if it is already foreground then just return
+        if self.handle != cur_foreground:
+            # set the foreground window
+            win32gui.SetForegroundWindow(self.handle)
 
         return self
-
-
 
     #-----------------------------------------------------------
     def SetApplicationData(self, appdata):

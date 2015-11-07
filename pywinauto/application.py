@@ -54,11 +54,9 @@ in almost exactly the same ways. ::
   :func:`WindowSpecification.Window`
 
 """
-from __future__ import absolute_import
 
 import time
 import os.path
-##import os
 import warnings
 import pickle
 
@@ -647,7 +645,7 @@ def _resolve_from_appdata(
                             if handleprops.controlid(hwnd) == \
                                 matched_control[2]['ControlID']]
 
-                    if len(same_ids) >= 1:
+                    if same_ids:
                         ctrl_hwnds = same_ids
 
                 try:

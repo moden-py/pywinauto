@@ -21,9 +21,8 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-"Basic wrapping of Windows controls"
+"""Basic wrapping of Windows controls"""
 from __future__ import unicode_literals
-from __future__ import absolute_import
 from __future__ import print_function
 
 # pylint:  disable-msg=W0611
@@ -1629,7 +1628,7 @@ class HwndWrapper(object):
 
         # the constant that matches direction, and how much
         scroll_type = \
-            HwndWrapper._scroll_types[direction.lower()][amount.lower()]
+            self._scroll_types[direction.lower()][amount.lower()]
 
         # Scroll as often as we have been asked to
         if retry_interval is None:

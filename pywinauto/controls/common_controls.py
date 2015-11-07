@@ -35,9 +35,6 @@ Classes that wrap the Windows Common controls
    :members:
    :show-inheritance:
 """
-
-
-from __future__ import absolute_import
 from __future__ import print_function
 
 import time
@@ -2495,8 +2492,7 @@ class ToolbarWrapper(HwndWrapper.HwndWrapper):
         #app = Application().Connect(handle=self.handle)
         
         current_toolbar = self
-        for i in range(len(indices)):
-            index = indices[i]
+        for i, index in enumerate(indices):
             windows_before = app.Windows_(visible_only=True)
             current_toolbar.Button(index).ClickInput()
             if i < len(indices) - 1:

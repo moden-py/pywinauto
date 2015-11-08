@@ -1575,6 +1575,7 @@ class HwndWrapper(object):
         # if it is already foreground then just return
         if self.handle != cur_foreground:
             # set the foreground window
+            self.actions.log('SetForegroundWindow "{0}"'.format(self.handle))
             win32gui.SetForegroundWindow(self.handle)
 
         return self

@@ -1603,8 +1603,8 @@ class HwndWrapper(object):
                 # ensure foreground window has changed to the target
                 # or is 0(no foreground window) before the threads detaching
                 timings.WaitUntil(
-                    Timings.after_setfocus_wait,
-                    Timings.after_setfocus_retry,
+                    Timings.setfocus_timeout,
+                    Timings.setfocus_retry,
                     lambda: win32gui.GetForegroundWindow()
                         in [self.TopLevelParent().handle, 0])
 

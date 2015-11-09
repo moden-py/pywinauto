@@ -1604,7 +1604,7 @@ class HwndWrapper(object):
                     Timings.after_setfocus_wait,
                     Timings.after_setfocus_retry,
                     win32gui.GetForegroundWindow,
-                    self.handle)
+                    self.TopLevelParent().handle)
 
                 # Detach the threads
                 win32process.AttachThreadInput(cur_fore_thread,

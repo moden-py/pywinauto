@@ -1590,25 +1590,35 @@ class HwndWrapper(object):
             # if a different thread owns the active window
             if cur_fore_thread != control_thread:
                 # Attach the two threads and set the foreground window
-                win32process.AttachThreadInput(cur_fore_thread, control_thread,
+                win32process.AttachThreadInput(control_thread,
+                                               cur_fore_thread,
                                                1)
 
                 self.actions.log('Call SetForegroundWindow within attached '
-                                 'threads - {0} & {1}.'.format(cur_fore_thread,
-                                                               control_thread))
+                                 'threads - {0} & {1}.'.format(control_thread,
+                                                               cur_fore_thread,
+                                                               ))
                 win32gui.SetForegroundWindow(self.handle)
 
-                # ensure foreground window has changed before the threads
-                # detaching
+                # ensure foreground window has changed to the target
+                # or is 0(no foreground window) before the threads detaching
                 timings.WaitUntil(
                     Timings.after_setfocus_wait,
                     Timings.after_setfocus_retry,
-                    win32gui.GetForegroundWindow,
-                    self.TopLevelParent().handle)
+                    lambda: win32gui.GetForegroundWindow()
+                        in [self.TopLevelParent().handle, 0])
 
-                # Detach the threads
-                win32process.AttachThreadInput(cur_fore_thread,
-                                               control_thread, 0)
+                # get the threads again to check they are still valid.
+                cur_fore_thread = win32process.GetWindowThreadProcessId(
+                    cur_foreground)[0]
+                control_thread = win32process.GetWindowThreadProcessId(
+                    self.handle)[0]
+
+                if cur_fore_thread and control_thread:  # both are valid
+                    # Detach the threads
+                    win32process.AttachThreadInput(control_thread,
+                                                   cur_fore_thread,
+                                                   0)
             else:
                 # same threads - just set the foreground window
                 self.actions.log('Call SetForegroundWindow within one thread.')

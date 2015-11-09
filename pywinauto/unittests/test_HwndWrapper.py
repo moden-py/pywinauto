@@ -46,7 +46,6 @@ from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.RemoteMemoryBlock import RemoteMemoryBlock
 from pywinauto.timings import Timings, TimeoutError
 from pywinauto import clipboard
-from pywinauto import actionlogger
 
 import unittest
 
@@ -748,21 +747,6 @@ class RemoteMemoryBlockTests(unittest.TestCase):
         mem.size = 24 # test hack
         self.assertRaises(Exception, mem.Write, buf)
 
-
-class InvestigateSetFocusProblem(unittest.TestCase):
-
-    def setUp(self):
-        actionlogger.enable()
-        self.app = Application()
-        self.app.start(os.path.join(mfc_samples_folder, u"RowList.exe"))
-
-    def tearDown(self):
-        actionlogger.disable()
-        self.app.kill_()
-
-    def testOnRowListExe(self):
-        self.app['RowList Sample Application'].SetFocus()
-        self.assertTrue("passed")
 
 if __name__ == "__main__":
     unittest.main()

@@ -34,6 +34,7 @@ import ctypes
 import win32api
 import win32gui
 import win32con
+import win32process
 import pywintypes # TODO: get rid of pywintypes because it's not compatible with Python 3.5
 import locale
 
@@ -1565,18 +1566,59 @@ class HwndWrapper(object):
 
     #-----------------------------------------------------------
     def SetFocus(self):
-        """Set the focus to this control
 
-        Bring the window to the foreground first if necessary."""
+        """
+        Set the focus to this control.
+        Bring the window to the foreground first if necessary.
+        """
 
         # find the current foreground window
-        cur_foreground = win32functions.GetForegroundWindow()
+        cur_foreground = win32gui.GetForegroundWindow()
 
         # if it is already foreground then just return
         if self.handle != cur_foreground:
             # set the foreground window
-            self.actions.log('SetForegroundWindow "{0}"'.format(self.handle))
-            win32gui.SetForegroundWindow(self.handle)
+
+            # get the thread of the window that is in the foreground
+            cur_fore_thread = win32process.GetWindowThreadProcessId(
+                cur_foreground)[0]
+
+            # get the thread of the window that we want to be in the foreground
+            control_thread = win32process.GetWindowThreadProcessId(
+                self.handle)[0]
+
+            # if a different thread owns the active window
+            if cur_fore_thread != control_thread:
+                # Attach the two threads and set the foreground window
+                win32process.AttachThreadInput(cur_fore_thread, control_thread,
+                                               1)
+
+                self.actions.log('Call SetForegroundWindow within attached '
+                                 'threads - {0} & {1}.'.format(cur_fore_thread,
+                                                               control_thread))
+                win32gui.SetForegroundWindow(self.handle)
+
+                # ensure foreground window has changed before the threads
+                # detaching
+                timings.WaitUntil(
+                    Timings.after_setfocus_wait,
+                    Timings.after_setfocus_retry,
+                    win32gui.GetForegroundWindow,
+                    self.handle)
+
+                # Detach the threads
+                win32process.AttachThreadInput(cur_fore_thread,
+                                               control_thread, 0)
+            else:
+                # same threads - just set the foreground window
+                self.actions.log('Call SetForegroundWindow within one thread.')
+                win32gui.SetForegroundWindow(self.handle)
+
+            # make sure that we are idle before returning
+            win32functions.WaitGuiThreadIdle(self)
+
+            # only sleep if we had to change something!
+            time.sleep(Timings.after_setfocus_wait)
 
         return self
 

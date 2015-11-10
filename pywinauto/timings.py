@@ -133,7 +133,7 @@ class TimeConfig(object):
 
         'after_setfocus_wait': .06,
         'setfocus_timeout': 10,
-        'setfocus_retry': .5,
+        'setfocus_retry': .50,
 
         'after_setcursorpos_wait' : .01,
 

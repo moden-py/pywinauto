@@ -1620,6 +1620,7 @@ class HwndWrapper(object):
                     win32process.AttachThreadInput(control_thread,
                                                    cur_fore_thread,
                                                    0)
+                    self.actions.log('SFSFSF6 - detached.')
             else:
                 # same threads - just set the foreground window
                 self.actions.log('Call SetForegroundWindow within one thread.')
@@ -1627,6 +1628,7 @@ class HwndWrapper(object):
 
             # make sure that we are idle before returning
             win32functions.WaitGuiThreadIdle(self)
+            self.actions.log('SFSFSF7 - after WaitGuiThreadIdle.')
 
             # only sleep if we had to change something!
             time.sleep(Timings.after_setfocus_wait)

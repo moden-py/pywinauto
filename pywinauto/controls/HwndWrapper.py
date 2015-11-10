@@ -1574,7 +1574,7 @@ class HwndWrapper(object):
 
         # find the current foreground window
         cur_foreground = win32gui.GetForegroundWindow()
-
+        print("SFSFSF0", self.handle, cur_foreground)
         # if it is already foreground then just return
         if self.handle != cur_foreground:
             # set the foreground window
@@ -1586,7 +1586,7 @@ class HwndWrapper(object):
             # get the thread of the window that we want to be in the foreground
             control_thread = win32process.GetWindowThreadProcessId(
                 self.handle)[0]
-
+            print("SFSFSF1", cur_fore_thread, control_thread)
             # if a different thread owns the active window
             if cur_fore_thread != control_thread:
                 # Attach the two threads and set the foreground window
@@ -1598,8 +1598,9 @@ class HwndWrapper(object):
                                  'threads - {0} & {1}.'.format(control_thread,
                                                                cur_fore_thread,
                                                                ))
-                win32gui.SetForegroundWindow(self.handle)
-
+                r = win32gui.SetForegroundWindow(self.handle)
+                print("SFSFSF2", r)
+                print("SFSFSF3", win32gui.GetForegroundWindow())
                 # ensure foreground window has changed to the target
                 # or is 0(no foreground window) before the threads detaching
                 timings.WaitUntil(
@@ -1607,13 +1608,13 @@ class HwndWrapper(object):
                     Timings.setfocus_retry,
                     lambda: win32gui.GetForegroundWindow()
                         in [self.TopLevelParent().handle, 0])
-
+                print("SFSFSF4", win32gui.GetForegroundWindow())
                 # get the threads again to check they are still valid.
                 cur_fore_thread = win32process.GetWindowThreadProcessId(
                     cur_foreground)[0]
                 control_thread = win32process.GetWindowThreadProcessId(
                     self.handle)[0]
-
+                print("SFSFSF5", cur_fore_thread, control_thread)
                 if cur_fore_thread and control_thread:  # both are valid
                     # Detach the threads
                     win32process.AttachThreadInput(control_thread,

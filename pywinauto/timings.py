@@ -132,8 +132,8 @@ class TimeConfig(object):
         'after_windowclose_retry':  .5,
 
         'after_setfocus_wait': .06,
-        'setfocus_timeout': 5,
-        'setfocus_retry': .5,
+        'setfocus_timeout': 2,
+        'setfocus_retry': .2,
 
         'after_setcursorpos_wait' : .01,
 

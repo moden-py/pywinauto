@@ -1603,12 +1603,17 @@ class HwndWrapper(object):
                 self.actions.log('SFSFSF3 - {0}.'.format(win32gui.GetForegroundWindow()))
                 # ensure foreground window has changed to the target
                 # or is 0(no foreground window) before the threads detaching
-                timings.WaitUntil(
-                    Timings.setfocus_timeout,
-                    Timings.setfocus_retry,
-                    lambda: win32gui.GetForegroundWindow()
-                        in [self.TopLevelParent().handle, 0])
-                self.actions.log('SFSFSF4 - {0}.'.format(win32gui.GetForegroundWindow()))
+                try:
+                    timings.WaitUntil(
+                        Timings.setfocus_timeout,
+                        Timings.setfocus_retry,
+                        lambda: win32gui.GetForegroundWindow()
+                            in [self.TopLevelParent().handle, 0])
+                except:
+                    self.actions.log('SFSFSF4 - {0}.'.format(win32gui.GetForegroundWindow()))
+                    for i in range(30):
+                        self.actions.log('SFSFSF4.{1} - {0}.'.format(win32gui.GetForegroundWindow(), i))
+                        time.sleep(1)
                 # get the threads again to check they are still valid.
                 cur_fore_thread = win32process.GetWindowThreadProcessId(
                     cur_foreground)[0]

@@ -66,11 +66,11 @@ class ActionloggerTestCases(unittest.TestCase):
         actionlogger.enable()
         prev_line_count = self.__lineCount()
         self.app.UntitledNotepad.TypeKeys('Test pywinauto logging', with_spaces=True)
-        self.assertEquals(self.__lineCount(), prev_line_count+1)
+        self.assertEquals(self.__lineCount(), prev_line_count+2)
         
         actionlogger.disable()
         self.app.UntitledNotepad.MenuSelect('Help->About Notepad')
-        self.assertEquals(self.__lineCount(), prev_line_count+1)
+        self.assertEquals(self.__lineCount(), prev_line_count+2)
         
         actionlogger.enable()
         self.app.Window_(title='About Notepad').OK.Click()

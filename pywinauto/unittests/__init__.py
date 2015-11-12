@@ -63,6 +63,9 @@ class PywinautoTestCases(unittest.TestCase):
 
         if ImageGrab:
             ImageGrab.grab().save(SCREENSHOTMASK.format(name=name))
+        else:
+            with open('ImageGrab'+name, 'w'):
+                pass
 
     def run(self, result=None):
 
@@ -93,3 +96,6 @@ class PywinautoTestCases(unittest.TestCase):
 
         if not self.__test_successful:
             self.save_screenshot(self._testMethodName)
+        else:
+            with open('successful'+self._testMethodName, 'w'):
+                pass

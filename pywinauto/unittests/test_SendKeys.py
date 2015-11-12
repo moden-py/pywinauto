@@ -35,6 +35,7 @@ from pywinauto import six
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.application import Application
 from pywinauto.actionlogger import ActionLogger
+from pywinauto.unittests import PywinautoTestCases
 import os
 import locale
 import unittest
@@ -52,12 +53,14 @@ def _notepad_exe():
         return r"C:\Windows\SysWOW64\notepad.exe"
 
 
-class SendKeysTests(unittest.TestCase):
+class SendKeysTests(PywinautoTestCases):
     "Unit tests for the Sendkeys module"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(SendKeysTests, self).setUp()
+
         self.app = Application()
         self.app.start(_notepad_exe())
         
@@ -66,6 +69,8 @@ class SendKeysTests(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(SendKeysTests, self).tearDown()
+
         try:
             self.dlg.Close(0.1)
         except Exception: # TimeoutError:
@@ -116,7 +121,6 @@ class SendKeysTests(unittest.TestCase):
         received = self.ctrl.TextBlock()
         self.assertEquals("", received)
 
-
     # Tab tests
     def testNormalWithTabs(self):
         "Make sure that with spaces option works"
@@ -138,13 +142,11 @@ class SendKeysTests(unittest.TestCase):
         received = self.ctrl.TextBlock()
         self.assertEquals("ab", received)
 
-
     def testTab(self):
         "Make sure that with spaces option works"
         SendKeys("{TAB}  {TAB} ", pause = .3)
         received = self.ctrl.TextBlock()
         self.assertEquals("\t\t", received)
-
 
     # Newline tests
     def testNormalWithNewlines(self):
@@ -166,7 +168,6 @@ class SendKeysTests(unittest.TestCase):
         SendKeys("\t \t \t\na", pause = .01, with_newlines = False)
         received = self.ctrl.TextBlock()
         self.assertEquals("a", received)
-
 
     #def testANSIExtendedCharacters(self):
     #    "Make sure that sending any character in range "
@@ -233,18 +234,22 @@ class SendKeysTests(unittest.TestCase):
         self.assertEquals("\t\t\tFF", received)
 
 
-class SendKeysModifiersTests(unittest.TestCase):
+class SendKeysModifiersTests(PywinautoTestCases):
     "Unit tests for the Sendkeys module (modifiers)"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(SendKeysModifiersTests, self).setUp()
+
         self.app = Application().start(os.path.join(mfc_samples_folder, u"CtrlTest.exe"))
 
         self.dlg = self.app.Control_Test_App
 
     def tearDown(self):
         "Close the application after tests"
+        super(SendKeysModifiersTests, self).tearDown()
+
         try:
             self.dlg.Close(0.5)
         except Exception:

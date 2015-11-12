@@ -35,6 +35,7 @@ from pywinauto.sysinfo import is_x64_Python, \
 from pywinauto import win32defines
 from pywinauto.timings import WaitUntil
 import pywinauto.actionlogger
+from pywinauto.unittests import PywinautoTestCases
 
 #pywinauto.actionlogger.enable()
 mfc_samples_folder = os.path.join(
@@ -42,8 +43,11 @@ mfc_samples_folder = os.path.join(
 if is_x64_Python():
     mfc_samples_folder = os.path.join(mfc_samples_folder, 'x64')
 
+
 _ready_timeout = 30
 _retry_interval = 0.5
+
+
 def _toggle_notification_area_icons(show_all=True, debug_img=None):
     """
     A helper function to change 'Show All Icons' settings.
@@ -113,6 +117,7 @@ def _toggle_notification_area_icons(show_all=True, debug_img=None):
 
     return cur_state
 
+
 def _wait_minimized(dlg):
     '''
     A helper function to verify that the specified dialog is minimized.
@@ -127,12 +132,15 @@ def _wait_minimized(dlg):
         func = lambda: (dlg.GetShowState() == win32defines.SW_SHOWMINIMIZED))
     return True
 
-class TaskbarTestCases(unittest.TestCase):
+
+class TaskbarTestCases(PywinautoTestCases):
     "Unit tests for the taskbar"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(TaskbarTestCases, self).setUp()
+
         self.tm = _ready_timeout
         app = Application()
         app.start(os.path.join(mfc_samples_folder, u"TrayMenu.exe"))
@@ -143,6 +151,8 @@ class TaskbarTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(TaskbarTestCases, self).tearDown()
+
         self.dlg.SendMessage(win32defines.WM_CLOSE)
         self.dlg.WaitNot('ready')
 
@@ -311,6 +321,7 @@ class TaskbarTestCases(unittest.TestCase):
         # close the second sample app
         dlg2.SendMessage(win32defines.WM_CLOSE)
         self.app2 = None
+
 
 if __name__ == "__main__":
     unittest.main()

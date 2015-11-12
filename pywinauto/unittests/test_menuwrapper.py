@@ -26,6 +26,7 @@ sys.path.append(".")
 from pywinauto.application import Application
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.controls.menuwrapper import MenuItemNotEnabled
+from pywinauto.unittests import PywinautoTestCases
 
 import unittest
 
@@ -35,12 +36,13 @@ if is_x64_Python():
     mfc_samples_folder = os.path.join(mfc_samples_folder, 'x64')
 
 
-class MenuWrapperTests(unittest.TestCase):
+class MenuWrapperTests(PywinautoTestCases):
     "Unit tests for the Menu and the MenuItem classes"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(MenuWrapperTests, self).setUp()
 
         # start the application
         self.app = Application()
@@ -50,14 +52,14 @@ class MenuWrapperTests(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        self.app.kill_()
+        super(MenuWrapperTests, self).tearDown()
 
+        self.app.kill_()
 
     def testInvalidHandle(self):
         "Test that an exception is raised with an invalid menu handle"
         #self.assertRaises(InvalidWindowHandle, HwndWrapper, -1)
         pass
-
 
     def testItemCount(self):
         self.assertEquals(5, self.dlg.Menu().ItemCount())
@@ -111,12 +113,13 @@ class MenuWrapperTests(unittest.TestCase):
         About.WaitNot('visible')
 
 
-class OwnerDrawnMenuTests(unittest.TestCase):
+class OwnerDrawnMenuTests(PywinautoTestCases):
     "Unit tests for the OWNERDRAW menu items"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(OwnerDrawnMenuTests, self).setUp()
 
         self.app = Application().Start(os.path.join(mfc_samples_folder, u"BCDialogMenu.exe"))
 
@@ -124,6 +127,8 @@ class OwnerDrawnMenuTests(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(OwnerDrawnMenuTests, self).tearDown()
+
         self.app.kill_()
 
     def testCorrectText(self):

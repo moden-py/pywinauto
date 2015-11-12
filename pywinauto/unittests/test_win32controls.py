@@ -31,6 +31,7 @@ sys.path.append(".")
 from pywinauto import XMLHelpers, win32defines #, six
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.application import Application
+from pywinauto.unittests import PywinautoTestCases
 
 import unittest
 
@@ -53,13 +54,14 @@ if is_x64_Python():
     MFC_tutorial_folder = os.path.join(MFC_tutorial_folder, 'x64')
 
 
-class ButtonTestCases(unittest.TestCase):
+class ButtonTestCases(PywinautoTestCases):
 
     """Unit tests for the ButtonWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(ButtonTestCases, self).setUp()
 
         # start the application
         from pywinauto.application import Application
@@ -74,6 +76,7 @@ class ButtonTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(ButtonTestCases, self).tearDown()
 
         self.app.kill_()
         #self.calc.TypeKeys("%{F4}")
@@ -162,12 +165,13 @@ class ButtonTestCases(unittest.TestCase):
         self.assertEquals(self.calc.Radians.GetCheckState(), 1)
 
 
-class CheckBoxTests(unittest.TestCase):
+class CheckBoxTests(PywinautoTestCases):
     "Unit tests for the CheckBox specific methods of the ButtonWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(CheckBoxTests, self).setUp()
 
         # start the application
         self.app = Application()
@@ -178,6 +182,8 @@ class CheckBoxTests(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(CheckBoxTests, self).tearDown()
+
         self.app.kill_()
 
     def testCheckUncheckByClick(self):
@@ -219,13 +225,15 @@ class CheckBoxTests(unittest.TestCase):
         # TODO: find an application with the check box that supports indeterminate state (gray-checked)
 
 
-class ButtonOwnerdrawTestCases(unittest.TestCase):
+class ButtonOwnerdrawTestCases(PywinautoTestCases):
 
     """Unit tests for the ButtonWrapper(ownerdraw button)"""
 
     def setUp(self):
 
         """Start the sample application. Open a tab with ownerdraw button."""
+
+        super(ButtonOwnerdrawTestCases, self).setUp()
 
         # start the application
         self.app = Application().Start(os.path.join(mfc_samples_folder, u"CmnCtrl3.exe"))
@@ -235,6 +243,8 @@ class ButtonOwnerdrawTestCases(unittest.TestCase):
     def tearDown(self):
 
         """Close the application after tests"""
+
+        super(ButtonOwnerdrawTestCases, self).tearDown()
 
         self.app.kill_()
 
@@ -249,13 +259,14 @@ class ButtonOwnerdrawTestCases(unittest.TestCase):
         # assertIn and assertNotIn are not supported in Python 2.6
 
 
-class ComboBoxTestCases(unittest.TestCase):
+class ComboBoxTestCases(PywinautoTestCases):
 
     """Unit tests for the ComboBoxWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(ComboBoxTestCases, self).setUp()
 
         # start the application
         self.app = Application()
@@ -268,6 +279,8 @@ class ComboBoxTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(ComboBoxTestCases, self).tearDown()
+
         self.app.kill_()
 
     def testGetProperties(self):
@@ -338,13 +351,14 @@ class ComboBoxTestCases(unittest.TestCase):
         self.ctrl.ItemData(self.ctrl.ItemCount() - 1)
 
 
-class ListBoxTestCases(unittest.TestCase):
+class ListBoxTestCases(PywinautoTestCases):
 
     """Unit tests for the ListBoxWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(ListBoxTestCases, self).setUp()
 
         # start the application
         from pywinauto.application import Application
@@ -370,6 +384,7 @@ class ListBoxTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(ListBoxTestCases, self).tearDown()
 
         #self.dlg.Cancel.Click()
 
@@ -428,13 +443,14 @@ class ListBoxTestCases(unittest.TestCase):
         self.assertEquals(self.ctrl.GetItemFocus(), 2)
 
 
-class EditTestCases(unittest.TestCase):
+class EditTestCases(PywinautoTestCases):
 
     """Unit tests for the EditWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(EditTestCases, self).setUp()
 
         # start the application
         from pywinauto.application import Application
@@ -472,6 +488,7 @@ class EditTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(EditTestCases, self).tearDown()
 
         # set it back to it's old position so not to annoy users :-)
         self.old_pos = self.dlg.Rectangle
@@ -559,13 +576,14 @@ class EditTestCases(unittest.TestCase):
         self.assertEquals((start, end), self.ctrl.SelectionIndices())
 
 
-class UnicodeEditTestCases(unittest.TestCase):
+class UnicodeEditTestCases(PywinautoTestCases):
 
     """Unit tests for the EditWrapper class using Unicode strings"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(UnicodeEditTestCases, self).setUp()
 
         # start the application
         self.app = Application().Start(os.path.join(mfc_samples_folder, u"CmnCtrl1.exe"))
@@ -577,6 +595,8 @@ class UnicodeEditTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(UnicodeEditTestCases, self).tearDown()
+
         self.app.kill_()
 
     def testSetEditTextWithUnicode(self):
@@ -607,13 +627,14 @@ class UnicodeEditTestCases(unittest.TestCase):
         #self.assertEquals(self.ctrl.TextBlock(), u'\u043d\u0435\u0447\u0442\u043e') # u'nechto'
 
 
-class DialogTestCases(unittest.TestCase):
+class DialogTestCases(PywinautoTestCases):
 
     """Unit tests for the DialogWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(DialogTestCases, self).setUp()
 
         # start the application
         from pywinauto.application import Application
@@ -630,6 +651,8 @@ class DialogTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(DialogTestCases, self).tearDown()
+
         self.app.kill_()
         #self.calc.TypeKeys("%{F4}")
 
@@ -711,13 +734,14 @@ class DialogTestCases(unittest.TestCase):
         self.assertEquals(self.calc.IsInTaskbar(), True)
 
 
-class PopupMenuTestCases(unittest.TestCase):
+class PopupMenuTestCases(PywinautoTestCases):
 
     """Unit tests for the PopupMenuWrapper class"""
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(PopupMenuTestCases, self).setUp()
 
         # start the application
         from pywinauto.application import Application
@@ -729,6 +753,8 @@ class PopupMenuTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(PopupMenuTestCases, self).tearDown()
+
         self.popup.TypeKeys("{ESC}")
         self.app.kill_() #.Notepad.TypeKeys("%{F4}")
 
@@ -755,13 +781,15 @@ class PopupMenuTestCases(unittest.TestCase):
         self.assertNotEquals(0, handle)
 
 
-class StaticTestCases(unittest.TestCase):
+class StaticTestCases(PywinautoTestCases):
 
     """Unit tests for the StaticWrapper class"""
 
     def setUp(self):
 
         """Start the sample application. Open a tab with ownerdraw button."""
+
+        super(StaticTestCases, self).setUp()
 
         # start the application
         self.app = Application().Start(os.path.join(mfc_samples_folder, u"RebarTest.exe"))
@@ -771,6 +799,8 @@ class StaticTestCases(unittest.TestCase):
     def tearDown(self):
 
         """Close the application after tests"""
+
+        super(StaticTestCases, self).tearDown()
 
         self.app.kill_()
 
@@ -796,5 +826,4 @@ class StaticTestCases(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    #_unittests()
     unittest.main()

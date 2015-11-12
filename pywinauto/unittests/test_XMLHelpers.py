@@ -26,18 +26,24 @@ sys.path.append(".")
 
 from pywinauto.XMLHelpers import WriteDialogToFile, ReadPropertiesFromFile, LOGFONTW, RECT
 from pywinauto import six
+from pywinauto.unittests import PywinautoTestCases
 
 import unittest
 
-class XMLHelperTestCases(unittest.TestCase):
+
+class XMLHelperTestCases(PywinautoTestCases):
     "Unit tests for the ListViewWrapper class"
 
     def setUp(self):
         """Actually does nothing!"""
+        super(XMLHelperTestCases, self).setUp()
+
         pass
 
     def tearDown(self):
         "delete the file we have created"
+        super(XMLHelperTestCases, self).tearDown()
+
         import os
         os.unlink("__unittests.xml")
 
@@ -69,7 +75,6 @@ class XMLHelperTestCases(unittest.TestCase):
 
         props = [dict(test = test_string)]
         self.assertReadWriteSame(props)
-
 
     def testOneBool(self):
         "Test writing/reading Bool"

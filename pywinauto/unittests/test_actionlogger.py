@@ -22,13 +22,13 @@
 
 __revision__ = "$Revision$"
 
-import unittest
-
 import os, sys, logging
+import unittest
 sys.path.append(".")
 from pywinauto import actionlogger
 from pywinauto.application import Application
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
+from pywinauto.unittests import PywinautoTestCases
 
 
 def _notepad_exe():
@@ -38,12 +38,14 @@ def _notepad_exe():
         return r"C:\Windows\SysWOW64\notepad.exe"
 
 
-class ActionloggerTestCases(unittest.TestCase):
+class ActionloggerTestCases(PywinautoTestCases):
     "Unit tests for the actionlogger"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        super(ActionloggerTestCases, self).setUp()
+
         actionlogger.enable()
         self.app = Application().start(_notepad_exe())
         self.logger = logging.getLogger('pywinauto')
@@ -52,6 +54,8 @@ class ActionloggerTestCases(unittest.TestCase):
 
     def tearDown(self):
         "Close the application after tests"
+        super(ActionloggerTestCases, self).tearDown()
+
         self.logger.parent.handlers[0].stream = self.out
         self.app.kill_()
 

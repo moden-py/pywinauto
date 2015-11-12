@@ -403,7 +403,7 @@ class ApplicationTestCases(PywinautoTestCases):
             installed_programs = window.FolderView.Texts()[1:]
             programs_list = ','.join(installed_programs)
             if ('Microsoft' not in programs_list) and ('Python' not in programs_list):
-                HwndWrapper.ImageGrab.grab().save(r'explorer_screenshot.jpg')
+                self.save_screenshot('explorer_screenshot')
             HwndWrapper.ActionLogger().log('\ninstalled_programs:\n')
             for prog in installed_programs:
                 HwndWrapper.ActionLogger().log(prog)

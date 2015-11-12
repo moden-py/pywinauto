@@ -35,7 +35,7 @@ from pywinauto.sysinfo import is_x64_Python, \
 from pywinauto import win32defines
 from pywinauto.timings import WaitUntil
 import pywinauto.actionlogger
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCases, SCREENSHOTMASK
 
 #pywinauto.actionlogger.enable()
 mfc_samples_folder = os.path.join(
@@ -106,7 +106,7 @@ def _toggle_notification_area_icons(show_all=True, debug_img=None):
     except Exception as e:
         if debug_img:
             from PIL import ImageGrab
-            ImageGrab.grab().save("%s.jpg" % (debug_img), "JPEG")
+            ImageGrab.grab().save(SCREENSHOTMASK.format(name=debug_img))
         l = pywinauto.actionlogger.ActionLogger()
         l.log("RuntimeError in _toggle_notification_area_icons")
         raise e

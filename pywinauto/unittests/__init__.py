@@ -30,7 +30,7 @@ except ImportError:
     ImageGrab = None
 
 
-SCREENSHOTMASK = "scr-{test_name}.png"
+SCREENSHOTMASK = "scr-{name}.jpg"
 
 
 class PywinautoTestCases(unittest.TestCase):
@@ -54,14 +54,15 @@ class PywinautoTestCases(unittest.TestCase):
         else:
             return False
 
-    def save_screenshot(self, mask=SCREENSHOTMASK):
+    @staticmethod
+    def save_screenshot(name):
 
         """
         Save full screen image.
         """
 
         if ImageGrab:
-            ImageGrab.grab().save(mask.format(test_name=self._testMethodName))
+            ImageGrab.grab().save(SCREENSHOTMASK.format(name=name))
 
     def run(self, result=None):
 
@@ -91,4 +92,4 @@ class PywinautoTestCases(unittest.TestCase):
         """
 
         if not self.__test_successful:
-            self.save_screenshot()
+            self.save_screenshot(self._testMethodName)

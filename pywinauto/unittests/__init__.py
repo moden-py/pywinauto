@@ -46,13 +46,21 @@ class PywinautoTestCases(unittest.TestCase):
         """
         True if the test passed successfully.
         """
+        if not hasattr(self, '__result'):
+            return None
 
         test_failures = filter(lambda i: i[0] == self, self.__result.failures)
         test_errors = filter(lambda i: i[0] == self, self.__result.errors)
-        if not test_failures and not test_errors:
-            return True
-        else:
+        test_expected_failures = filter(lambda i: i[0] == self,
+                                       self.__result.expectedFailures)
+        test_unexpected_successes = filter(lambda i: i == self,
+                                           self.__result.unexpectedSuccesses)
+
+        if test_failures or test_errors or test_expected_failures or \
+                test_unexpected_successes:
             return False
+        else:
+            return True
 
     @staticmethod
     def save_screenshot(name):
@@ -74,8 +82,9 @@ class PywinautoTestCases(unittest.TestCase):
         in setUp/tearDown methods.
         """
 
-        self.__result = result
-        super(PywinautoTestCases, self).run(result)
+        if result:
+            self.__result = result
+        return super(PywinautoTestCases, self).run(result)
 
     def setUp(self):
 

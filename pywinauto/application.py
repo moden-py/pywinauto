@@ -67,7 +67,6 @@ from . import controls
 from . import findbestmatch
 from . import findwindows
 from . import handleprops
-from . import unittests
 
 import win32process, win32api, win32gui, win32con, win32event, multiprocessing
 

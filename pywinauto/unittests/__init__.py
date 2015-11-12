@@ -51,13 +51,13 @@ class PywinautoTestCases(unittest.TestCase):
 
         test_failures = filter(lambda i: i[0] == self, self.__result.failures)
         test_errors = filter(lambda i: i[0] == self, self.__result.errors)
-        test_expected_failures = filter(lambda i: i[0] == self,
-                                       self.__result.expectedFailures)
-        test_unexpected_successes = filter(lambda i: i == self,
-                                           self.__result.unexpectedSuccesses)
+        # test_expected_failures = filter(lambda i: i[0] == self,
+        #                                self.__result.expectedFailures)
+        # test_unexpected_successes = filter(lambda i: i == self,
+        #                                    self.__result.unexpectedSuccesses)
 
-        if test_failures or test_errors or test_expected_failures or \
-                test_unexpected_successes:
+        # if test_failures or test_errors or test_expected_failures or test_unexpected_successes:
+        if test_failures or test_errors:
             return False
         else:
             return True

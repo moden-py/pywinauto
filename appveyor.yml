@@ -84,7 +84,9 @@ artifacts:
 #
 
 on_failure:
-  - "7z a screenshots.zip pywinauto\\unittests\\scr-*.png"
+  - "7z a screenshots.zip pywinauto\\scr-*.png"
   - "appveyor PushArtifact screenshots.zip"
   - "dir"
   - "dir .."
+  - "dir pywinauto"
+  - "dir pywinauto\\unittests"

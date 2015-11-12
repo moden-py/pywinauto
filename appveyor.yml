@@ -84,5 +84,5 @@ artifacts:
 #
 
 on_failure:
-  - "7z a screenshots.zip scr-*.jpg"
+  - "7z a screenshots.zip scr-*.png"
   - "appveyor PushArtifact screenshots.zip"

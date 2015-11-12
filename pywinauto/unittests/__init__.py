@@ -91,4 +91,4 @@ class PywinautoTestCases(unittest.TestCase):
         """
 
         if not self.__test_successful:
-            print("Save snapshot for %s" % self._testMethodName)
+            self.save_screenshot()

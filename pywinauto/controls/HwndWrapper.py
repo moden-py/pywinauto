@@ -1574,7 +1574,7 @@ class HwndWrapper(object):
 
         # find the current foreground window
         cur_foreground = win32gui.GetForegroundWindow()
-        self.actions.log('SFSFSF0 - {0} & {1}.'.format(self.handle, cur_foreground))
+
         # if it is already foreground then just return
         if self.handle != cur_foreground:
             # set the foreground window
@@ -1586,7 +1586,7 @@ class HwndWrapper(object):
             # get the thread of the window that we want to be in the foreground
             control_thread = win32process.GetWindowThreadProcessId(
                 self.handle)[0]
-            self.actions.log('SFSFSF1 - {0} & {1}.'.format(cur_fore_thread, control_thread))
+
             # if a different thread owns the active window
             if cur_fore_thread != control_thread:
                 # Attach the two threads and set the foreground window
@@ -1598,34 +1598,27 @@ class HwndWrapper(object):
                                  'threads - {0} & {1}.'.format(control_thread,
                                                                cur_fore_thread,
                                                                ))
-                r = win32gui.SetForegroundWindow(self.handle)
-                self.actions.log('SFSFSF2 - {0}.'.format(r))
-                self.actions.log('SFSFSF3 - {0}.'.format(win32gui.GetForegroundWindow()))
+                win32gui.SetForegroundWindow(self.handle)
+
                 # ensure foreground window has changed to the target
                 # or is 0(no foreground window) before the threads detaching
-                try:
-                    timings.WaitUntil(
-                        Timings.setfocus_timeout,
-                        Timings.setfocus_retry,
-                        lambda: win32gui.GetForegroundWindow()
-                            in [self.TopLevelParent().handle, 0])
-                except:
-                    self.actions.log('SFSFSF4 - {0}.'.format(win32gui.GetForegroundWindow()))
-                    for i in range(30):
-                        self.actions.log('SFSFSF4.{1} - {0}.'.format(win32gui.GetForegroundWindow(), i))
-                        time.sleep(1)
+                timings.WaitUntil(
+                    Timings.setfocus_timeout,
+                    Timings.setfocus_retry,
+                    lambda: win32gui.GetForegroundWindow()
+                    in [self.TopLevelParent().handle, 0])
+
                 # get the threads again to check they are still valid.
                 cur_fore_thread = win32process.GetWindowThreadProcessId(
                     cur_foreground)[0]
                 control_thread = win32process.GetWindowThreadProcessId(
                     self.handle)[0]
-                self.actions.log('SFSFSF5 - {0} & {1}.'.format(cur_fore_thread, control_thread))
+
                 if cur_fore_thread and control_thread:  # both are valid
                     # Detach the threads
                     win32process.AttachThreadInput(control_thread,
                                                    cur_fore_thread,
                                                    0)
-                    self.actions.log('SFSFSF6 - detached.')
             else:
                 # same threads - just set the foreground window
                 self.actions.log('Call SetForegroundWindow within one thread.')
@@ -1633,7 +1626,6 @@ class HwndWrapper(object):
 
             # make sure that we are idle before returning
             win32functions.WaitGuiThreadIdle(self)
-            self.actions.log('SFSFSF7 - after WaitGuiThreadIdle.')
 
             # only sleep if we had to change something!
             time.sleep(Timings.after_setfocus_wait)

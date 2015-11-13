@@ -46,11 +46,11 @@ class PywinautoTestCases(unittest.TestCase):
         """
         True if the test passed successfully.
         """
-        if not hasattr(self, '__result'):
+        if not hasattr(self, '_result'):
             return None
 
-        test_failures = filter(lambda i: i[0] == self, self.__result.failures)
-        test_errors = filter(lambda i: i[0] == self, self.__result.errors)
+        test_failures = filter(lambda i: i[0] == self, self._result.failures)
+        test_errors = filter(lambda i: i[0] == self, self._result.errors)
         # test_expected_failures = filter(lambda i: i[0] == self,
         #                                self.__result.expectedFailures)
         # test_unexpected_successes = filter(lambda i: i == self,
@@ -70,7 +70,7 @@ class PywinautoTestCases(unittest.TestCase):
         """
 
         if ImageGrab:
-            ImageGrab.grab().save(SCREENSHOTMASK.format(name=name))
+            ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
         else:
             with open('ImageGrab'+name, 'w'):
                 pass
@@ -83,7 +83,7 @@ class PywinautoTestCases(unittest.TestCase):
         """
 
         if result:
-            self.__result = result
+            self._result = result
         return super(PywinautoTestCases, self).run(result)
 
     def setUp(self):

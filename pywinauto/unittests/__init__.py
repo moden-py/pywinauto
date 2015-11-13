@@ -29,6 +29,11 @@ try:
 except ImportError:
     ImageGrab = None
 
+try:
+    import nose
+except ImportError:
+    nose = None
+
 
 SCREENSHOTMASK = "scr-{name}.jpg"
 
@@ -49,8 +54,12 @@ class PywinautoTestCases(unittest.TestCase):
         if not hasattr(self, '_result'):
             return None
 
-        test_failures = filter(lambda i: i[0] == self, self._result.failures)
-        test_errors = filter(lambda i: i[0] == self, self._result.errors)
+        if nose and isinstance(self._result, nose.proxy.ResultProxy):
+            test_failures = filter(lambda i: i[0].test == self, self._result.failures)
+            test_errors = filter(lambda i: i[0].test == self, self._result.errors)
+        else:
+            test_failures = filter(lambda i: i[0] == self, self._result.failures)
+            test_errors = filter(lambda i: i[0] == self, self._result.errors)
         # test_expected_failures = filter(lambda i: i[0] == self,
         #                                self.__result.expectedFailures)
         # test_unexpected_successes = filter(lambda i: i == self,

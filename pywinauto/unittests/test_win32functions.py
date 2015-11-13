@@ -26,10 +26,10 @@ import unittest
 import sys
 sys.path.append(".")
 from pywinauto.win32functions import MakeLong, HiWord, LoWord
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 
-class Win32FunctionsTestCases(PywinautoTestCases):
+class Win32FunctionsTestCases(PywinautoTestCase):
     "Unit tests for the win32function methods"
 
     def testMakeLong(self):

@@ -36,10 +36,10 @@ from pywinauto.handleprops import children, classname, clientrect, contexthelpid
 from pywinauto.application import Application
 from pywinauto import six
 from pywinauto.sysinfo import is_x64_OS, is_x64_Python
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 
-class HandlepropsTestCases(PywinautoTestCases):
+class HandlepropsTestCases(PywinautoTestCase):
     "Unit tests for the handleprops module"
 
     def setUp(self):

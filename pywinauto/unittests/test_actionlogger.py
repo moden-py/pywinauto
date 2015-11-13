@@ -28,7 +28,7 @@ sys.path.append(".")
 from pywinauto import actionlogger
 from pywinauto.application import Application
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 
 def _notepad_exe():
@@ -38,7 +38,7 @@ def _notepad_exe():
         return r"C:\Windows\SysWOW64\notepad.exe"
 
 
-class ActionloggerTestCases(PywinautoTestCases):
+class ActionloggerTestCases(PywinautoTestCase):
     "Unit tests for the actionlogger"
 
     def setUp(self):

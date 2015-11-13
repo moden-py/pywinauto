@@ -46,7 +46,7 @@ from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.RemoteMemoryBlock import RemoteMemoryBlock
 from pywinauto.timings import Timings, TimeoutError
 from pywinauto import clipboard
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 import unittest
 
@@ -64,7 +64,7 @@ def _notepad_exe():
         return r"C:\Windows\SysWOW64\notepad.exe"
 
 
-class HwndWrapperTests(PywinautoTestCases):
+class HwndWrapperTests(PywinautoTestCase):
     "Unit tests for the TreeViewWrapper class"
 
     def setUp(self):
@@ -497,7 +497,7 @@ class HwndWrapperTests(PywinautoTestCases):
         self.assertEquals(self.dlg.IsVisible(), True)
 
 
-class HwndWrapperMouseTests(PywinautoTestCases):
+class HwndWrapperMouseTests(PywinautoTestCase):
     "Unit tests for mouse actions of the HwndWrapper class"
 
     def setUp(self):
@@ -588,7 +588,7 @@ class HwndWrapperMouseTests(PywinautoTestCases):
         self.assertRaises(ValueError, self.dlg.SetTransparency, 256)
 
 
-class NotepadRegressionTests(PywinautoTestCases):
+class NotepadRegressionTests(PywinautoTestCase):
     "Regression unit tests for Notepad"
 
     def setUp(self):
@@ -651,7 +651,7 @@ class NotepadRegressionTests(PywinautoTestCases):
         self.assertEquals(self.dlg.Edit.TextBlock().encode(locale.getpreferredencoding()), text*3)
 
 
-class DragAndDropTests(PywinautoTestCases):
+class DragAndDropTests(PywinautoTestCase):
     "Unit tests for mouse actions like drag-n-drop"
 
     def setUp(self):
@@ -694,7 +694,7 @@ class DragAndDropTests(PywinautoTestCases):
         self.assertEquals([child.Text() for child in dogs.Children()], [u'Birds', u'Dalmatian', u'German Shepherd', u'Great Dane'])
 
 
-class GetDialogPropsFromHandleTest(PywinautoTestCases):
+class GetDialogPropsFromHandleTest(PywinautoTestCase):
     "Unit tests for mouse actions of the HwndWrapper class"
 
     def setUp(self):
@@ -733,7 +733,7 @@ class GetDialogPropsFromHandleTest(PywinautoTestCases):
         self.assertEquals(props_from_handle, props_from_dialog)
 
 
-class RemoteMemoryBlockTests(PywinautoTestCases):
+class RemoteMemoryBlockTests(PywinautoTestCase):
     "Unit tests for RemoteMemoryBlock"
 
     def setUp(self):

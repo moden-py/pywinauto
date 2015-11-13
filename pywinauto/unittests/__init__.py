@@ -38,7 +38,7 @@ except ImportError:
 SCREENSHOTMASK = "scr-{name}.jpg"
 
 
-class PywinautoTestCases(unittest.TestCase):
+class PywinautoTestCase(unittest.TestCase):
 
     """
     Base class for pywinauto testing.
@@ -93,7 +93,7 @@ class PywinautoTestCases(unittest.TestCase):
 
         if result is not None:
             self._result = result
-        return super(PywinautoTestCases, self).run(result)
+        return super(PywinautoTestCase, self).run(result)
 
     def setUp(self):
 

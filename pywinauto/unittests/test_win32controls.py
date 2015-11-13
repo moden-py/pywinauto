@@ -31,7 +31,7 @@ sys.path.append(".")
 from pywinauto import XMLHelpers, win32defines #, six
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.application import Application
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 import unittest
 
@@ -54,7 +54,7 @@ if is_x64_Python():
     MFC_tutorial_folder = os.path.join(MFC_tutorial_folder, 'x64')
 
 
-class ButtonTestCases(PywinautoTestCases):
+class ButtonTestCases(PywinautoTestCase):
 
     """Unit tests for the ButtonWrapper class"""
 
@@ -167,7 +167,7 @@ class ButtonTestCases(PywinautoTestCases):
         self.assertEquals(self.calc.Radians.GetCheckState(), 1)
 
 
-class CheckBoxTests(PywinautoTestCases):
+class CheckBoxTests(PywinautoTestCase):
     "Unit tests for the CheckBox specific methods of the ButtonWrapper class"
 
     def setUp(self):
@@ -227,7 +227,7 @@ class CheckBoxTests(PywinautoTestCases):
         # TODO: find an application with the check box that supports indeterminate state (gray-checked)
 
 
-class ButtonOwnerdrawTestCases(PywinautoTestCases):
+class ButtonOwnerdrawTestCases(PywinautoTestCase):
 
     """Unit tests for the ButtonWrapper(ownerdraw button)"""
 
@@ -261,7 +261,7 @@ class ButtonOwnerdrawTestCases(PywinautoTestCases):
         # assertIn and assertNotIn are not supported in Python 2.6
 
 
-class ComboBoxTestCases(PywinautoTestCases):
+class ComboBoxTestCases(PywinautoTestCase):
 
     """Unit tests for the ComboBoxWrapper class"""
 
@@ -353,7 +353,7 @@ class ComboBoxTestCases(PywinautoTestCases):
         self.ctrl.ItemData(self.ctrl.ItemCount() - 1)
 
 
-class ListBoxTestCases(PywinautoTestCases):
+class ListBoxTestCases(PywinautoTestCase):
 
     """Unit tests for the ListBoxWrapper class"""
 
@@ -445,7 +445,7 @@ class ListBoxTestCases(PywinautoTestCases):
         self.assertEquals(self.ctrl.GetItemFocus(), 2)
 
 
-class EditTestCases(PywinautoTestCases):
+class EditTestCases(PywinautoTestCase):
 
     """Unit tests for the EditWrapper class"""
 
@@ -578,7 +578,7 @@ class EditTestCases(PywinautoTestCases):
         self.assertEquals((start, end), self.ctrl.SelectionIndices())
 
 
-class UnicodeEditTestCases(PywinautoTestCases):
+class UnicodeEditTestCases(PywinautoTestCase):
 
     """Unit tests for the EditWrapper class using Unicode strings"""
 
@@ -629,7 +629,7 @@ class UnicodeEditTestCases(PywinautoTestCases):
         #self.assertEquals(self.ctrl.TextBlock(), u'\u043d\u0435\u0447\u0442\u043e') # u'nechto'
 
 
-class DialogTestCases(PywinautoTestCases):
+class DialogTestCases(PywinautoTestCase):
 
     """Unit tests for the DialogWrapper class"""
 
@@ -736,7 +736,7 @@ class DialogTestCases(PywinautoTestCases):
         self.assertEquals(self.calc.IsInTaskbar(), True)
 
 
-class PopupMenuTestCases(PywinautoTestCases):
+class PopupMenuTestCases(PywinautoTestCase):
 
     """Unit tests for the PopupMenuWrapper class"""
 
@@ -783,7 +783,7 @@ class PopupMenuTestCases(PywinautoTestCases):
         self.assertNotEquals(0, handle)
 
 
-class StaticTestCases(PywinautoTestCases):
+class StaticTestCases(PywinautoTestCase):
 
     """Unit tests for the StaticWrapper class"""
 

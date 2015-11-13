@@ -35,7 +35,7 @@ from pywinauto import six
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.application import Application
 from pywinauto.actionlogger import ActionLogger
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 import os
 import locale
 import unittest
@@ -53,7 +53,7 @@ def _notepad_exe():
         return r"C:\Windows\SysWOW64\notepad.exe"
 
 
-class SendKeysTests(PywinautoTestCases):
+class SendKeysTests(PywinautoTestCase):
     "Unit tests for the Sendkeys module"
 
     def setUp(self):
@@ -234,7 +234,7 @@ class SendKeysTests(PywinautoTestCases):
         self.assertEquals("\t\t\tFF", received)
 
 
-class SendKeysModifiersTests(PywinautoTestCases):
+class SendKeysModifiersTests(PywinautoTestCase):
     "Unit tests for the Sendkeys module (modifiers)"
 
     def setUp(self):

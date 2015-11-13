@@ -35,7 +35,7 @@ from pywinauto.sysinfo import is_x64_Python, \
 from pywinauto import win32defines
 from pywinauto.timings import WaitUntil
 import pywinauto.actionlogger
-from pywinauto.unittests import PywinautoTestCases, SCREENSHOTMASK
+from pywinauto.unittests import PywinautoTestCase, SCREENSHOTMASK
 
 #pywinauto.actionlogger.enable()
 mfc_samples_folder = os.path.join(
@@ -133,7 +133,7 @@ def _wait_minimized(dlg):
     return True
 
 
-class TaskbarTestCases(PywinautoTestCases):
+class TaskbarTestCases(PywinautoTestCase):
     "Unit tests for the taskbar"
 
     def setUp(self):

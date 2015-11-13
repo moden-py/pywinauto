@@ -31,10 +31,10 @@ import sys
 sys.path.append(".")
 from pywinauto import findbestmatch
 from pywinauto import win32structures
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 
-class TestFindBestMatch(PywinautoTestCases):
+class TestFindBestMatch(PywinautoTestCase):
 
     def setUp(self):
         # load the test strings
@@ -66,7 +66,7 @@ class DummyCtrl():
         return self.rect
 
 
-class TestIsAboveOrToLeft(PywinautoTestCases):
+class TestIsAboveOrToLeft(PywinautoTestCase):
     def testSameRect(self):
         "both rectangles are the same so false"
         other = DummyCtrl(10, 20, 200, 40)

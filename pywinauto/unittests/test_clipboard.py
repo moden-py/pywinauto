@@ -28,11 +28,11 @@ sys.path.append(".")
 from pywinauto.clipboard import GetClipboardFormats, GetData, GetFormatName, EmptyClipboard
 from pywinauto.application import Application
 from pywinauto.win32structures import RECT
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 import time
 
-class ClipboardTestCases(PywinautoTestCases):
+class ClipboardTestCases(PywinautoTestCase):
     "Unit tests for the clipboard"
 
     def setUp(self):

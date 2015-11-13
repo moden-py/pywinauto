@@ -42,7 +42,7 @@ from pywinauto.sysinfo import is_x64_Python
 from pywinauto.RemoteMemoryBlock import AccessDenied
 from pywinauto.RemoteMemoryBlock import RemoteMemoryBlock
 from pywinauto.actionlogger import ActionLogger
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 
 controlspy_folder = os.path.join(
@@ -54,12 +54,12 @@ if is_x64_Python():
     mfc_samples_folder = os.path.join(mfc_samples_folder, 'x64')
 
 
-class RemoteMemoryBlockTestCases(PywinautoTestCases):
+class RemoteMemoryBlockTestCases(PywinautoTestCase):
     def test__init__fail(self):
         self.assertRaises(AccessDenied, RemoteMemoryBlock, 0)
 
 
-class ListViewTestCases(PywinautoTestCases):
+class ListViewTestCases(PywinautoTestCase):
     "Unit tests for the ListViewWrapper class"
 
     def setUp(self):
@@ -452,7 +452,7 @@ class ListViewTestCases(PywinautoTestCases):
         self.assertNotEqual(item1, item2)
 
 
-class TreeViewTestCases(PywinautoTestCases):
+class TreeViewTestCases(PywinautoTestCase):
     "Unit tests for the TreeViewWrapper class"
 
     def setUp(self):
@@ -595,7 +595,7 @@ class TreeViewTestCases(PywinautoTestCases):
         self.assertEquals(False, self.ctrl.IsSelected(mercury_diam_item_path))
 
 
-class TreeViewAdditionalTestCases(PywinautoTestCases):
+class TreeViewAdditionalTestCases(PywinautoTestCase):
     "More unit tests for the TreeViewWrapper class (CmnCtrl1.exe)"
 
     def setUp(self):
@@ -691,7 +691,7 @@ class TreeViewAdditionalTestCases(PywinautoTestCases):
         self.assertEquals(new_pigeon.Children(), [])
 
 
-class HeaderTestCases(PywinautoTestCases):
+class HeaderTestCases(PywinautoTestCase):
     "Unit tests for the Header class"
 
     def setUp(self):
@@ -776,7 +776,7 @@ class HeaderTestCases(PywinautoTestCases):
                 self.ctrl.GetColumnText(i))
 
 
-class StatusBarTestCases(PywinautoTestCases):
+class StatusBarTestCases(PywinautoTestCase):
     "Unit tests for the TreeViewWrapper class"
 
     def setUp(self):
@@ -888,7 +888,7 @@ class StatusBarTestCases(PywinautoTestCases):
             self.assertEquals(text, self.ctrl.GetPartText(i))
 
 
-class TabControlTestCases(PywinautoTestCases):
+class TabControlTestCases(PywinautoTestCase):
     "Unit tests for the TreeViewWrapper class"
 
     def setUp(self):
@@ -1037,7 +1037,7 @@ class TabControlTestCases(PywinautoTestCases):
         self.assertRaises(IndexError, self.ctrl.Select, 99)
 
 
-class ToolbarTestCases(PywinautoTestCases):
+class ToolbarTestCases(PywinautoTestCase):
     "Unit tests for the ToolbarWrapper class"
 
     def setUp(self):
@@ -1183,7 +1183,7 @@ class ToolbarTestCases(PywinautoTestCases):
         self.assertEquals(self.ctrl.Button('About', exact=False, by_tooltip=True).Text(), 'About')
 
 
-class RebarTestCases(PywinautoTestCases):
+class RebarTestCases(PywinautoTestCase):
     "Unit tests for the UpDownWrapper class"
 
     def setUp(self):
@@ -1271,7 +1271,7 @@ class RebarTestCases(PywinautoTestCases):
         self.app.Window_(title='About RebarTest').WaitNot('visible')
 
 
-class DatetimeTestCases(PywinautoTestCases):
+class DatetimeTestCases(PywinautoTestCase):
     "Unit tests for the DateTimePicker class"
 
     def setUp(self):
@@ -1349,7 +1349,7 @@ class DatetimeTestCases(PywinautoTestCases):
         self.assertEqual(test_date_time.wMilliseconds, milliseconds)
 
 
-class ToolTipsTestCases(PywinautoTestCases):
+class ToolTipsTestCases(PywinautoTestCase):
     "Unit tests for the tooltips class"
 
     def setUp(self):
@@ -1437,7 +1437,7 @@ class ToolTipsTestCases(PywinautoTestCases):
         self.assertEquals(self.ctrl.Texts()[1:], self.texts)
 
 
-class UpDownTestCases(PywinautoTestCases):
+class UpDownTestCases(PywinautoTestCase):
     "Unit tests for the UpDownWrapper class"
 
     def setUp(self):

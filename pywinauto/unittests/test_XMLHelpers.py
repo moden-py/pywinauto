@@ -26,12 +26,12 @@ sys.path.append(".")
 
 from pywinauto.XMLHelpers import WriteDialogToFile, ReadPropertiesFromFile, LOGFONTW, RECT
 from pywinauto import six
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 import unittest
 
 
-class XMLHelperTestCases(PywinautoTestCases):
+class XMLHelperTestCases(PywinautoTestCase):
     "Unit tests for the ListViewWrapper class"
 
     def setUp(self):

@@ -26,7 +26,7 @@ sys.path.append(".")
 from pywinauto.application import Application
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.controls.menuwrapper import MenuItemNotEnabled
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 import unittest
 
@@ -36,7 +36,7 @@ if is_x64_Python():
     mfc_samples_folder = os.path.join(mfc_samples_folder, 'x64')
 
 
-class MenuWrapperTests(PywinautoTestCases):
+class MenuWrapperTests(PywinautoTestCase):
     "Unit tests for the Menu and the MenuItem classes"
 
     def setUp(self):
@@ -113,7 +113,7 @@ class MenuWrapperTests(PywinautoTestCases):
         About.WaitNot('visible')
 
 
-class OwnerDrawnMenuTests(PywinautoTestCases):
+class OwnerDrawnMenuTests(PywinautoTestCase):
     "Unit tests for the OWNERDRAW menu items"
 
     def setUp(self):

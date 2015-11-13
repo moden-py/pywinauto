@@ -43,7 +43,7 @@ from pywinauto.application import ProcessNotFoundError, AppStartError, AppNotCon
 from pywinauto import findwindows, findbestmatch
 from pywinauto.timings import Timings, TimeoutError, WaitUntil
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
-from pywinauto.unittests import PywinautoTestCases
+from pywinauto.unittests import PywinautoTestCase
 
 Timings.Fast()
 #application.set_timing(1, .01, 1, .01, .05, 0, 0, .1, 0, .01)
@@ -59,7 +59,7 @@ def _notepad_exe():
         return r"C:\Windows\SysWOW64\notepad.exe"
 
 
-class ApplicationWarningTestCases(PywinautoTestCases):
+class ApplicationWarningTestCases(PywinautoTestCase):
     "Unit tests for warnings in the application.Application class"
 
     def setUp(self):
@@ -142,7 +142,7 @@ class ApplicationWarningTestCases(PywinautoTestCases):
         self.assertEquals(warn_text in str(warns[-1].message), True)
 
 
-class ApplicationTestCases(PywinautoTestCases):
+class ApplicationTestCases(PywinautoTestCase):
     "Unit tests for the application.Application class"
 
     def setUp(self):
@@ -538,7 +538,7 @@ class ApplicationTestCases(PywinautoTestCases):
         self.assertRaises(AttributeError, app.UntitledNotepad.Edit)
 
 
-class WindowSpecificationTestCases(PywinautoTestCases):
+class WindowSpecificationTestCases(PywinautoTestCase):
     "Unit tests for the application.Application class"
 
     def setUp(self):

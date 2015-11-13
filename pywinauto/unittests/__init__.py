@@ -82,7 +82,7 @@ class PywinautoTestCases(unittest.TestCase):
         in setUp/tearDown methods.
         """
 
-        if result:
+        if result is not None:
             self._result = result
         return super(PywinautoTestCases, self).run(result)
 

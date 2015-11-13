@@ -41,7 +41,7 @@ class PywinautoTestCases(unittest.TestCase):
     """
 
     @property
-    def __test_successful(self):
+    def _test_successful(self):
 
         """
         True if the test passed successfully.
@@ -103,7 +103,7 @@ class PywinautoTestCases(unittest.TestCase):
         clearing actions.
         """
 
-        if not self.__test_successful:
+        if not self._test_successful:
             self.save_screenshot(self._testMethodName)
         else:
             with open('successful'+self._testMethodName, 'w'):

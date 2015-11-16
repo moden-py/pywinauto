@@ -22,8 +22,9 @@
 
 """pywinauto base test class"""
 
-
+import subprocess
 import unittest
+
 try:
     from PIL import ImageGrab
 except ImportError:
@@ -42,7 +43,7 @@ def save_screenshot(name):
     to be sure a screenshot named according the CI config.
     """
 
-    if ImageGrab:
+    if ImageGrab is not None:
         ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
 
 
@@ -77,6 +78,14 @@ class PywinautoTestCase(unittest.TestCase):
                 original_return = original_method(*args, **kwargs)
 
             except:
+
+                # re-raise the original exception
+                raise
+
+            else:
+                return original_return
+
+            finally:
                 if self._testMethodName == method_name:
                     # test's main execution section
                     name = method_name
@@ -86,12 +95,9 @@ class PywinautoTestCase(unittest.TestCase):
                         test_name=self._testMethodName,
                         method_name=method_name)
 
-                save_screenshot(name)
-                # re-raise the original exception
-                raise
-
-            else:
-                return original_return
+                #save_screenshot(name)
+                subprocess.call(["python", "-c",
+                                 "from pywinauto import unittests;unittests.save_screenshot('{name}')".format(name=name)])
 
         # replace the original method by own handler
         setattr(self, method_name, proxy)

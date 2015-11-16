@@ -107,7 +107,6 @@ class ButtonTestCases(PywinautoTestCase):
 
     def testFriendlyClass(self):
         "Test the FriendlyClassName method"
-        self.assertTrue(False)  # test screenshots
         self.assertEquals(self.calc.Button9.FriendlyClassName(), "Button")
         self.assertEquals(self.calc.Degree.FriendlyClassName(), "RadioButton")
         #self.assertEquals(self.calc.Hex.FriendlyClassName(), "CheckBox")
@@ -131,7 +130,6 @@ class ButtonTestCases(PywinautoTestCase):
 
     def testGetCheckState_unchecked(self):
         "unchecked"
-        self.assertTrue(False)  # test screenshots
         self.assertEquals(self.calc.Grads.GetCheckState(), 0)
 
     def testGetCheckState_checked(self):

@@ -36,14 +36,16 @@ from pywinauto.handleprops import children, classname, clientrect, contexthelpid
 from pywinauto.application import Application
 from pywinauto import six
 from pywinauto.sysinfo import is_x64_OS, is_x64_Python
+from pywinauto.unittests import PywinautoTestCase
 
 
-class HandlepropsTestCases(unittest.TestCase):
+class HandlepropsTestCases(PywinautoTestCase):
     "Unit tests for the handleprops module"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        
         self.app = Application().start("notepad")
         self.dlghandle = self.app.UntitledNotepad.handle
         self.edit_handle = self.app.UntitledNotepad.Edit.handle
@@ -51,6 +53,7 @@ class HandlepropsTestCases(unittest.TestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
+        
         #self.dlg.SendMessage(win32defines.WM_CLOSE)
         #self.app.UntitledNotepad.MenuSelect("File->Exit")
         self.app.kill_()
@@ -59,7 +62,6 @@ class HandlepropsTestCases(unittest.TestCase):
         "Make sure the text method returns correct result"
         self.assertEquals("Untitled - Notepad", text(self.dlghandle))
         self.assertEquals("", text(self.edit_handle))
-
 
     def test_classname(self):
         "Make sure the classname method returns correct result"
@@ -122,7 +124,6 @@ class HandlepropsTestCases(unittest.TestCase):
         # need to check something not unicode
         #self.assertEquals(False, isunicode(self.edit_handle))
 
-
     def test_isenabled(self):
         "Make sure the isenabled method returns correct result"
         self.assertEquals(True, isenabled(self.dlghandle))
@@ -161,8 +162,6 @@ class HandlepropsTestCases(unittest.TestCase):
         self.assertEquals(True,
             rectangle(self.edit_handle).bottom > clientrect(self.edit_handle).bottom)
 
-
-
     def test_rectangle(self):
         "Make sure the friendly class is set correctly"
         dlgrect = rectangle(self.dlghandle)
@@ -181,7 +180,6 @@ class HandlepropsTestCases(unittest.TestCase):
         editfont = font(self.edit_handle)
         self.assertEquals(True, isinstance(editfont.lfFaceName, six.string_types))
 
-
     def test_processid(self):
         "Make sure the friendly class is set correctly"
         self.assertEquals(self.app.process, processid(self.dlghandle))
@@ -199,7 +197,6 @@ class HandlepropsTestCases(unittest.TestCase):
 
         self.assertEquals(False,  has_style(self.dlghandle, 4))
         self.assertEquals(False, has_style(self.edit_handle, 1))
-
 
     def test_has_exstyle(self):
         "Make sure the has_exstyle method returns correct result"
@@ -269,11 +266,7 @@ class HandlepropsTestCases(unittest.TestCase):
             self.assertEquals(item, globals()[key](self.edit_handle))
 
 
-
-
 if __name__ == "__main__":
-    #_unittests()
-
     unittest.main()
 
 

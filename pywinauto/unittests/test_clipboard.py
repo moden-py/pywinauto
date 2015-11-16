@@ -28,15 +28,17 @@ sys.path.append(".")
 from pywinauto.clipboard import GetClipboardFormats, GetData, GetFormatName, EmptyClipboard
 from pywinauto.application import Application
 from pywinauto.win32structures import RECT
+from pywinauto.unittests import PywinautoTestCase
 
 import time
 
-class ClipboardTestCases(unittest.TestCase):
+class ClipboardTestCases(PywinautoTestCase):
     "Unit tests for the clipboard"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        
         EmptyClipboard()
         self.app1 = Application().start("notepad.exe")
         self.app2 = Application().start("notepad.exe")
@@ -48,6 +50,7 @@ class ClipboardTestCases(unittest.TestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
+        
         self.app1.UntitledNotepad.MenuSelect('File -> Exit')
         if self.app1.Notepad["Do&n't Save"].Exists():
             self.app1.Notepad["Do&n't Save"].Click()

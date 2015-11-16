@@ -26,9 +26,10 @@ import unittest
 import sys
 sys.path.append(".")
 from pywinauto.win32functions import MakeLong, HiWord, LoWord
+from pywinauto.unittests import PywinautoTestCase
 
 
-class Win32FunctionsTestCases(unittest.TestCase):
+class Win32FunctionsTestCases(PywinautoTestCase):
     "Unit tests for the win32function methods"
 
     def testMakeLong(self):
@@ -44,8 +45,6 @@ class Win32FunctionsTestCases(unittest.TestCase):
 
         for result, (hi, lo) in data:
             self.assertEquals(result, MakeLong(hi,lo))
-
-
 
     def testMakeLong_zero(self):
         "test that makelong(0,0)"
@@ -71,7 +70,6 @@ class Win32FunctionsTestCases(unittest.TestCase):
         "Make sure the friendly class is set correctly"
         self.assertEquals(0xffffffff, MakeLong(0xffff, 0xffff))
 
-
     def testLowWord_zero(self):
         self.assertEquals(0, LoWord(0))
 
@@ -83,7 +81,6 @@ class Win32FunctionsTestCases(unittest.TestCase):
 
     def testLowWord_vbig(self):
         self.assertEquals(0xffff, LoWord(MakeLong(0xffff, 0xffff)))
-
 
     def testHiWord_zero(self):
         self.assertEquals(0, HiWord(0))
@@ -100,7 +97,6 @@ class Win32FunctionsTestCases(unittest.TestCase):
     def testHiWord_vbig(self):
         self.assertEquals(0xffff, HiWord(MakeLong(0xffff, 0xffff)))
 
+
 if __name__ == "__main__":
     unittest.main()
-
-

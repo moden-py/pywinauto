@@ -43,6 +43,7 @@ from pywinauto.application import ProcessNotFoundError, AppStartError, AppNotCon
 from pywinauto import findwindows, findbestmatch
 from pywinauto.timings import Timings, TimeoutError, WaitUntil
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
+from pywinauto.unittests import PywinautoTestCase
 
 #application.set_timing(1, .01, 1, .01, .05, 0, 0, .1, 0, .01)
 
@@ -57,12 +58,13 @@ def _notepad_exe():
         return r"C:\Windows\SysWOW64\notepad.exe"
 
 
-class ApplicationWarningTestCases(unittest.TestCase):
+class ApplicationWarningTestCases(PywinautoTestCase):
     "Unit tests for warnings in the application.Application class"
 
     def setUp(self):
         """Set some data and ensure the application
         is in the state we want it."""
+        
         mfc_samples_folder = os.path.join(os.path.dirname(__file__),
                                           r"..\..\apps\MFC_samples")
         if is_x64_Python():
@@ -138,12 +140,13 @@ class ApplicationWarningTestCases(unittest.TestCase):
         self.assertEquals(warn_text in str(warns[-1].message), True)
 
 
-class ApplicationTestCases(unittest.TestCase):
+class ApplicationTestCases(PywinautoTestCase):
     "Unit tests for the application.Application class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        
         self.prev_warn = warnings.showwarning
         def no_warnings(*args, **kwargs): pass
         warnings.showwarning = no_warnings
@@ -158,6 +161,7 @@ class ApplicationTestCases(unittest.TestCase):
         #self.dlg.SendMessage(win32defines.WM_CLOSE)
         warnings.showwarning = self.prev_warn
 
+        
     def testNotConnected(self):
         "Verify that it raises when the app is not connected"
         #self.assertRaises (AppNotConnected, Application().__getattr__, 'Hiya')
@@ -395,7 +399,7 @@ class ApplicationTestCases(unittest.TestCase):
             installed_programs = window.FolderView.Texts()[1:]
             programs_list = ','.join(installed_programs)
             if ('Microsoft' not in programs_list) and ('Python' not in programs_list):
-                HwndWrapper.ImageGrab.grab().save(r'explorer_screenshot.jpg')
+                self.save_screenshot('explorer_screenshot')
             HwndWrapper.ActionLogger().log('\ninstalled_programs:\n')
             for prog in installed_programs:
                 HwndWrapper.ActionLogger().log(prog)
@@ -530,12 +534,13 @@ class ApplicationTestCases(unittest.TestCase):
         self.assertRaises(AttributeError, app.UntitledNotepad.Edit)
 
 
-class WindowSpecificationTestCases(unittest.TestCase):
+class WindowSpecificationTestCases(PywinautoTestCase):
     "Unit tests for the application.Application class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
+        
         self.app = Application().start("Notepad")
         self.dlgspec = self.app.UntitledNotepad
         self.ctrlspec = self.app.UntitledNotepad.Edit
@@ -545,6 +550,7 @@ class WindowSpecificationTestCases(unittest.TestCase):
         "Close the application after tests"
         # close the application
         #self.app.UntitledNotepad.MenuSelect("File->Exit")
+        
         self.app.kill_()
 
 
@@ -848,8 +854,4 @@ class WindowSpecificationTestCases(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    #_unittests()
-
     unittest.main()
-
-

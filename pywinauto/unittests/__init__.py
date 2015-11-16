@@ -29,143 +29,77 @@ try:
 except ImportError:
     ImageGrab = None
 
-try:
-    import nose
-except ImportError:
-    nose = None
-
 
 SCREENSHOTMASK = "scr-{name}.jpg"
 
 
-class PywinautoTestCase0(unittest.TestCase):
+def save_screenshot(name):
 
     """
-    Base class for pywinauto testing.
-    Hold common setUp/tearDown actions for all the tests.
+    Tries to save a screenshot.
+    Does nothing if ImageGrab is not imported.
+    Use this method instead of direct `ImageGrab.grab()` call in your tests,
+    to be sure a screenshot named according the CI config.
     """
 
-    @property
-    def _test_successful(self):
-
-        """
-        True if the test passed successfully.
-        """
-        if not hasattr(self, '_result'):
-            return None
-
-        if nose and isinstance(self._result, nose.proxy.ResultProxy):
-            test_failures = [failure for failure in self._result.failures
-                             if failure[0].test == self]
-            test_errors = [error for error in self._result.errors
-                           if error[0].test == self]
-        else:
-            test_failures = [failure for failure in self._result.failures
-                             if failure[0] == self]
-            test_errors = [error for error in self._result.errors
-                           if error[0] == self]
-
-        if test_failures or test_errors:
-            return False
-        else:
-            return True
-
-    @staticmethod
-    def save_screenshot(name):
-
-        """
-        Save full screen image.
-        """
-
-        if ImageGrab:
-            ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
-        else:
-            with open('ImageGrab'+name, 'w'):
-                pass
-
-    def run(self, result=None):
-
-        """
-        Grab the test case result object, to make possible check a test status
-        in setUp/tearDown methods.
-        """
-
-        if result is not None:
-            self._result = result
-        return super(PywinautoTestCase, self).run(result)
-
-    def setUp(self):
-
-        """
-        Default setUp actions for testing pywinauto.
-        Should be explicitly specified in a subclass method via `super`.
-        """
-        pass
-
-    def tearDown(self):
-
-        """
-        Default tearDown actions for testing pywinauto.
-        Should be explicitly specified in a subclass method via `super`.
-        To make the screen shots more helpful, use the `super` before the
-        clearing actions.
-        """
-
-        if not self._test_successful:
-            self.save_screenshot(self._testMethodName)
-        else:
-            with open('successful'+self._testMethodName, 'w'):
-                pass
-
-
-class PywinautoTestCase2(unittest.TestCase):
-
-    def __getattribute__(self, item):
-        print(item)
-        try:
-            return super(PywinautoTestCase2, self).__getattribute__(item)
-        except Exception as e:
-            print('!!!exception %s' % type(e))
-            raise
-
-
-def screenshot_on_fail(cls):
-    def creation(*args, **kwargs):
-        instance = cls(*args, **kwargs)
-
-        print(instance._testMethodName)
-
-        return instance
-    return creation
+    if ImageGrab:
+        ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
 
 
 class PywinautoTestCase(unittest.TestCase):
 
+    """
+    Base class for pywinauto UI tests.
+    Makes screen shots if a test fails.
+    """
 
     def _proxify(self, method_name):
-        original = getattr(self, method_name)
+
+        """
+        Proxies call for a regular unittest.TestCase method.
+        It is the only solution to intercept an error immediately
+        and immediately make a screenshot.
+        Screenshots names example:
+        scr-testEnableDisable.jpg - failed in the main test section.
+        scr-testEnableDisable_setUp - failed in the setUp method.
+        """
+
+        # save original method to a local variable
+        original_method = getattr(self, method_name)
 
         def proxy(*args, **kwargs):
+
+            """
+            A proxy of the original method
+            """
+
             try:
-                original_return = original(*args, **kwargs)
+                original_return = original_method(*args, **kwargs)
+
             except:
                 if self._testMethodName == method_name:
-                    # test body
+                    # test's main execution section
                     name = method_name
                 else:
-                    name = "{test_name}_{method_name}".format(test_name=self._testMethodName,
-                                                              method_name=method_name)
-                if ImageGrab:
-                    ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
+                    # setUp or tearDown failed
+                    name = "{test_name}_{method_name}".format(
+                        test_name=self._testMethodName,
+                        method_name=method_name)
+
+                save_screenshot(name)
+                # re-raise the original exception
                 raise
+
             else:
                 return original_return
 
+        # replace the original method by own handler
         setattr(self, method_name, proxy)
 
     def __init__(self, *args, **kwargs):
         super(PywinautoTestCase, self).__init__(*args, **kwargs)
 
+        # proxify needed methods
         self._proxify(self._testMethodName)
         self._proxify('setUp')
         self._proxify('tearDown')

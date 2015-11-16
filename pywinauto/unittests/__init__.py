@@ -44,23 +44,23 @@ def save_screenshot(name):
     to be sure a screenshot named according the CI config.
     """
 
-    # if ImageGrab is not None:
-    #     ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
+    if ImageGrab is not None:
+        ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
     # pyscreenshot.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
-    import win32gui, win32ui, win32con, win32api
-    hwin = win32gui.GetDesktopWindow()
-    width = win32api.GetSystemMetrics(win32con.SM_CXVIRTUALSCREEN)
-    height = win32api.GetSystemMetrics(win32con.SM_CYVIRTUALSCREEN)
-    left = win32api.GetSystemMetrics(win32con.SM_XVIRTUALSCREEN)
-    top = win32api.GetSystemMetrics(win32con.SM_YVIRTUALSCREEN)
-    hwindc = win32gui.GetWindowDC(hwin)
-    srcdc = win32ui.CreateDCFromHandle(hwindc)
-    memdc = srcdc.CreateCompatibleDC()
-    bmp = win32ui.CreateBitmap()
-    bmp.CreateCompatibleBitmap(srcdc, width, height)
-    memdc.SelectObject(bmp)
-    memdc.BitBlt((0, 0), (width, height), srcdc, (left, top), win32con.SRCCOPY)
-    bmp.SaveBitmapFile(memdc, SCREENSHOTMASK.format(name=name))
+    # import win32gui, win32ui, win32con, win32api
+    # hwin = win32gui.GetDesktopWindow()
+    # width = win32api.GetSystemMetrics(win32con.SM_CXVIRTUALSCREEN)
+    # height = win32api.GetSystemMetrics(win32con.SM_CYVIRTUALSCREEN)
+    # left = win32api.GetSystemMetrics(win32con.SM_XVIRTUALSCREEN)
+    # top = win32api.GetSystemMetrics(win32con.SM_YVIRTUALSCREEN)
+    # hwindc = win32gui.GetWindowDC(hwin)
+    # srcdc = win32ui.CreateDCFromHandle(hwindc)
+    # memdc = srcdc.CreateCompatibleDC()
+    # bmp = win32ui.CreateBitmap()
+    # bmp.CreateCompatibleBitmap(srcdc, width, height)
+    # memdc.SelectObject(bmp)
+    # memdc.BitBlt((0, 0), (width, height), srcdc, (left, top), win32con.SRCCOPY)
+    # bmp.SaveBitmapFile(memdc, SCREENSHOTMASK.format(name=name))
 
 
 class PywinautoTestCase(unittest.TestCase):

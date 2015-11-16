@@ -35,7 +35,7 @@ except ImportError:
     nose = None
 
 
-SCREENSHOTMASK = "scr-{name}.jpg"
+SCREENSHOTMASK = "scr-{name}.png"
 
 
 class PywinautoTestCase0(unittest.TestCase):
@@ -156,7 +156,7 @@ class PywinautoTestCase(unittest.TestCase):
                     name = "{test_name}_{method_name}".format(test_name=self._testMethodName,
                                                               method_name=method_name)
                 if ImageGrab:
-                    ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
+                    ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "PNG")
                 raise
             else:
                 return original_return

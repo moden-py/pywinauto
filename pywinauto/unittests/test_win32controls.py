@@ -61,8 +61,7 @@ class ButtonTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(ButtonTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         self.app = Application()
@@ -76,8 +75,7 @@ class ButtonTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(ButtonTestCases, self).tearDown()
-
+        
         self.app.kill_()
         #self.calc.TypeKeys("%{F4}")
 
@@ -173,8 +171,7 @@ class CheckBoxTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(CheckBoxTests, self).setUp()
-
+        
         # start the application
         self.app = Application()
         self.app.start(os.path.join(mfc_samples_folder, u"CmnCtrl1.exe"))
@@ -184,8 +181,7 @@ class CheckBoxTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(CheckBoxTests, self).tearDown()
-
+        
         self.app.kill_()
 
     def testCheckUncheckByClick(self):
@@ -235,8 +231,7 @@ class ButtonOwnerdrawTestCases(PywinautoTestCase):
 
         """Start the sample application. Open a tab with ownerdraw button."""
 
-        super(ButtonOwnerdrawTestCases, self).setUp()
-
+        
         # start the application
         self.app = Application().Start(os.path.join(mfc_samples_folder, u"CmnCtrl3.exe"))
         # open the needed tab
@@ -246,8 +241,7 @@ class ButtonOwnerdrawTestCases(PywinautoTestCase):
 
         """Close the application after tests"""
 
-        super(ButtonOwnerdrawTestCases, self).tearDown()
-
+        
         self.app.kill_()
 
     def test_NeedsImageProp(self):
@@ -268,8 +262,7 @@ class ComboBoxTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(ComboBoxTestCases, self).setUp()
-
+        
         # start the application
         self.app = Application()
 
@@ -281,8 +274,7 @@ class ComboBoxTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(ComboBoxTestCases, self).tearDown()
-
+        
         self.app.kill_()
 
     def testGetProperties(self):
@@ -360,8 +352,7 @@ class ListBoxTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(ListBoxTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         self.app = Application()
@@ -386,8 +377,7 @@ class ListBoxTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(ListBoxTestCases, self).tearDown()
-
+        
         #self.dlg.Cancel.Click()
 
         # close the application
@@ -452,8 +442,7 @@ class EditTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(EditTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -490,8 +479,7 @@ class EditTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(EditTestCases, self).tearDown()
-
+        
         # set it back to it's old position so not to annoy users :-)
         self.old_pos = self.dlg.Rectangle
 
@@ -585,8 +573,7 @@ class UnicodeEditTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(UnicodeEditTestCases, self).setUp()
-
+        
         # start the application
         self.app = Application().Start(os.path.join(mfc_samples_folder, u"CmnCtrl1.exe"))
 
@@ -597,8 +584,7 @@ class UnicodeEditTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(UnicodeEditTestCases, self).tearDown()
-
+        
         self.app.kill_()
 
     def testSetEditTextWithUnicode(self):
@@ -636,8 +622,7 @@ class DialogTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(DialogTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         self.app = Application()
@@ -653,8 +638,7 @@ class DialogTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(DialogTestCases, self).tearDown()
-
+        
         self.app.kill_()
         #self.calc.TypeKeys("%{F4}")
 
@@ -743,8 +727,7 @@ class PopupMenuTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(PopupMenuTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         self.app = Application()
@@ -755,8 +738,7 @@ class PopupMenuTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(PopupMenuTestCases, self).tearDown()
-
+        
         self.popup.TypeKeys("{ESC}")
         self.app.kill_() #.Notepad.TypeKeys("%{F4}")
 
@@ -791,8 +773,7 @@ class StaticTestCases(PywinautoTestCase):
 
         """Start the sample application. Open a tab with ownerdraw button."""
 
-        super(StaticTestCases, self).setUp()
-
+        
         # start the application
         self.app = Application().Start(os.path.join(mfc_samples_folder, u"RebarTest.exe"))
         # open the Help dailog
@@ -802,8 +783,7 @@ class StaticTestCases(PywinautoTestCase):
 
         """Close the application after tests"""
 
-        super(StaticTestCases, self).tearDown()
-
+        
         self.app.kill_()
 
     def test_NeedsImageProp(self):

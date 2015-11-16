@@ -65,8 +65,7 @@ class ListViewTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(ListViewTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -91,8 +90,7 @@ class ListViewTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(ListViewTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -458,8 +456,7 @@ class TreeViewTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(TreeViewTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -493,8 +490,7 @@ class TreeViewTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(TreeViewTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -601,8 +597,7 @@ class TreeViewAdditionalTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(TreeViewAdditionalTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         self.app = Application().start(os.path.join(mfc_samples_folder, "CmnCtrl1.exe"))
@@ -612,8 +607,7 @@ class TreeViewAdditionalTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(TreeViewAdditionalTestCases, self).tearDown()
-
+        
         self.dlg.Close()
         self.app.kill_()
 
@@ -697,8 +691,7 @@ class HeaderTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(HeaderTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -722,8 +715,7 @@ class HeaderTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(HeaderTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -782,8 +774,7 @@ class StatusBarTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(StatusBarTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -809,8 +800,7 @@ class StatusBarTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(StatusBarTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -894,8 +884,7 @@ class TabControlTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(TabControlTestCases, self).setUp()
-
+        
         self.screen_w = win32api.GetSystemMetrics(0)
 
         # start the application
@@ -930,8 +919,7 @@ class TabControlTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(TabControlTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1043,8 +1031,7 @@ class ToolbarTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(ToolbarTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -1076,8 +1063,7 @@ class ToolbarTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(ToolbarTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1196,8 +1182,7 @@ class RebarTestCases(PywinautoTestCase):
         A findbestmatch proc does well here with guessing the title 
         even though the app is started with a short title "RebarTest".
         """
-        super(RebarTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -1219,8 +1204,7 @@ class RebarTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(RebarTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1278,8 +1262,7 @@ class DatetimeTestCases(PywinautoTestCase):
         """
         Start the application and get 'Date Time Picker' control.
         """
-        super(DatetimeTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -1295,8 +1278,7 @@ class DatetimeTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(DatetimeTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1355,8 +1337,7 @@ class ToolTipsTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(ToolTipsTestCases, self).setUp()
-
+        
         self.texts = [u'', u'New', u'Open', u'Save', u'Cut', u'Copy', u'Paste', u'Print', u'About', u'Help']
 
         # start the application
@@ -1397,8 +1378,7 @@ class ToolTipsTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(ToolTipsTestCases, self).tearDown()
-
+        
         self.app.kill_()
 
     def testFriendlyClass(self):
@@ -1443,8 +1423,7 @@ class UpDownTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(UpDownTestCases, self).setUp()
-
+        
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -1465,8 +1444,7 @@ class UpDownTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(UpDownTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):

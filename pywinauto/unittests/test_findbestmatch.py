@@ -38,8 +38,7 @@ class TestFindBestMatch(PywinautoTestCase):
 
     def setUp(self):
         # load the test strings
-        super(TestFindBestMatch, self).setUp()
-
+        
         self.strings = open(os.path.join(test_path, "testtext.txt"), "rb").readlines()
         self.strings = (line.decode('utf-8')[:-1] for line in self.strings)
 

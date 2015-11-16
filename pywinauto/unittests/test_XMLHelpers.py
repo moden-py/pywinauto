@@ -36,14 +36,12 @@ class XMLHelperTestCases(PywinautoTestCase):
 
     def setUp(self):
         """Actually does nothing!"""
-        super(XMLHelperTestCases, self).setUp()
-
+        
         pass
 
     def tearDown(self):
         "delete the file we have created"
-        super(XMLHelperTestCases, self).tearDown()
-
+        
         import os
         os.unlink("__unittests.xml")
 

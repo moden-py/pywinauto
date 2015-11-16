@@ -45,8 +45,7 @@ class HandlepropsTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(HandlepropsTestCases, self).setUp()
-
+        
         self.app = Application().start("notepad")
         self.dlghandle = self.app.UntitledNotepad.handle
         self.edit_handle = self.app.UntitledNotepad.Edit.handle
@@ -54,8 +53,7 @@ class HandlepropsTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(HandlepropsTestCases, self).tearDown()
-
+        
         #self.dlg.SendMessage(win32defines.WM_CLOSE)
         #self.app.UntitledNotepad.MenuSelect("File->Exit")
         self.app.kill_()

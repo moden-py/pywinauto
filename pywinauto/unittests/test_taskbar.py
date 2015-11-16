@@ -139,8 +139,7 @@ class TaskbarTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(TaskbarTestCases, self).setUp()
-
+        
         self.tm = _ready_timeout
         app = Application()
         app.start(os.path.join(mfc_samples_folder, u"TrayMenu.exe"))
@@ -151,8 +150,7 @@ class TaskbarTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(TaskbarTestCases, self).tearDown()
-
+        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
         self.dlg.WaitNot('ready')
 

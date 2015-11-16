@@ -70,8 +70,7 @@ class HwndWrapperTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(HwndWrapperTests, self).setUp()
-
+        
         # start the application
         self.app = Application()
         if is_x64_Python() or not is_x64_OS():
@@ -86,8 +85,7 @@ class HwndWrapperTests(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(HwndWrapperTests, self).tearDown()
-
+        
         #self.dlg.TypeKeys("%{F4}")
         #self.dlg.Close()
         self.app.kill_()
@@ -503,8 +501,7 @@ class HwndWrapperMouseTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(HwndWrapperMouseTests, self).setUp()
-
+        
         # start the application
         self.app = Application().start(os.path.join(mfc_samples_folder, u"CmnCtrl3.exe"))
 
@@ -514,8 +511,7 @@ class HwndWrapperMouseTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(HwndWrapperMouseTests, self).tearDown()
-
+        
         # close the application
         try:
             self.dlg.Close(0.5)
@@ -594,8 +590,7 @@ class NotepadRegressionTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(NotepadRegressionTests, self).setUp()
-
+        
         # start the application
         self.app = Application()
         self.app.start(_notepad_exe())
@@ -608,8 +603,7 @@ class NotepadRegressionTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(NotepadRegressionTests, self).tearDown()
-
+        
         # close the application
         try:
             self.dlg.Close(0.5)
@@ -657,8 +651,7 @@ class DragAndDropTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(DragAndDropTests, self).setUp()
-
+        
         # start the application
         self.app = Application()
         self.app.start(os.path.join(mfc_samples_folder, u"CmnCtrl1.exe"))
@@ -668,8 +661,7 @@ class DragAndDropTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(DragAndDropTests, self).tearDown()
-
+        
         self.app.kill_()
 
     '''
@@ -700,8 +692,7 @@ class GetDialogPropsFromHandleTest(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(GetDialogPropsFromHandleTest, self).setUp()
-
+        
         # start the application
         self.app = Application()
         if is_x64_Python() or not is_x64_OS():
@@ -715,8 +706,7 @@ class GetDialogPropsFromHandleTest(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(GetDialogPropsFromHandleTest, self).tearDown()
-
+        
         #self.dlg.TypeKeys("%{F4}")
         self.dlg.Close(0.5)
         self.app.kill_()
@@ -739,8 +729,7 @@ class RemoteMemoryBlockTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(RemoteMemoryBlockTests, self).setUp()
-
+        
         # start the application
         self.app = Application()
         self.app.start(os.path.join(mfc_samples_folder, u"CmnCtrl1.exe"))
@@ -750,8 +739,7 @@ class RemoteMemoryBlockTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(RemoteMemoryBlockTests, self).tearDown()
-
+        
         self.app.kill_()
 
     def testGuardSignatureCorruption(self):

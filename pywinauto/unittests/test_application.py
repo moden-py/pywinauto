@@ -65,8 +65,7 @@ class ApplicationWarningTestCases(PywinautoTestCase):
     def setUp(self):
         """Set some data and ensure the application
         is in the state we want it."""
-        super(ApplicationWarningTestCases, self).setUp()
-
+        
         mfc_samples_folder = os.path.join(os.path.dirname(__file__),
                                           r"..\..\apps\MFC_samples")
         if is_x64_Python():
@@ -148,8 +147,7 @@ class ApplicationTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(ApplicationTestCases, self).setUp()
-
+        
         self.prev_warn = warnings.showwarning
         def no_warnings(*args, **kwargs): pass
         warnings.showwarning = no_warnings
@@ -164,8 +162,7 @@ class ApplicationTestCases(PywinautoTestCase):
         #self.dlg.SendMessage(win32defines.WM_CLOSE)
         warnings.showwarning = self.prev_warn
 
-        super(ApplicationTestCases, self).tearDown()
-
+        
     def testNotConnected(self):
         "Verify that it raises when the app is not connected"
         #self.assertRaises (AppNotConnected, Application().__getattr__, 'Hiya')
@@ -544,8 +541,7 @@ class WindowSpecificationTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(WindowSpecificationTestCases, self).setUp()
-
+        
         self.app = Application().start("Notepad")
         self.dlgspec = self.app.UntitledNotepad
         self.ctrlspec = self.app.UntitledNotepad.Edit
@@ -555,8 +551,7 @@ class WindowSpecificationTestCases(PywinautoTestCase):
         "Close the application after tests"
         # close the application
         #self.app.UntitledNotepad.MenuSelect("File->Exit")
-        super(WindowSpecificationTestCases, self).tearDown()
-
+        
         self.app.kill_()
 
 

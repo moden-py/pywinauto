@@ -38,8 +38,7 @@ class ClipboardTestCases(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(ClipboardTestCases, self).setUp()
-
+        
         EmptyClipboard()
         self.app1 = Application().start("notepad.exe")
         self.app2 = Application().start("notepad.exe")
@@ -51,8 +50,7 @@ class ClipboardTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        super(ClipboardTestCases, self).tearDown()
-
+        
         self.app1.UntitledNotepad.MenuSelect('File -> Exit')
         if self.app1.Notepad["Do&n't Save"].Exists():
             self.app1.Notepad["Do&n't Save"].Click()

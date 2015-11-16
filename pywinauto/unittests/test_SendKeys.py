@@ -59,8 +59,7 @@ class SendKeysTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(SendKeysTests, self).setUp()
-
+        
         self.app = Application()
         self.app.start(_notepad_exe())
         
@@ -69,8 +68,7 @@ class SendKeysTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(SendKeysTests, self).tearDown()
-
+        
         try:
             self.dlg.Close(0.1)
         except Exception: # TimeoutError:
@@ -240,16 +238,14 @@ class SendKeysModifiersTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(SendKeysModifiersTests, self).setUp()
-
+        
         self.app = Application().start(os.path.join(mfc_samples_folder, u"CtrlTest.exe"))
 
         self.dlg = self.app.Control_Test_App
 
     def tearDown(self):
         "Close the application after tests"
-        super(SendKeysModifiersTests, self).tearDown()
-
+        
         try:
             self.dlg.Close(0.5)
         except Exception:

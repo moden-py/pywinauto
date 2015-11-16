@@ -42,8 +42,7 @@ class MenuWrapperTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(MenuWrapperTests, self).setUp()
-
+        
         # start the application
         self.app = Application()
         self.app.start("Notepad.exe")
@@ -52,8 +51,7 @@ class MenuWrapperTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        super(MenuWrapperTests, self).tearDown()
-
+        
         self.app.kill_()
 
     def testInvalidHandle(self):
@@ -119,16 +117,14 @@ class OwnerDrawnMenuTests(PywinautoTestCase):
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        super(OwnerDrawnMenuTests, self).setUp()
-
+        
         self.app = Application().Start(os.path.join(mfc_samples_folder, u"BCDialogMenu.exe"))
 
         self.dlg = self.app.BCDialogMenu
 
     def tearDown(self):
         "Close the application after tests"
-        super(OwnerDrawnMenuTests, self).tearDown()
-
+        
         self.app.kill_()
 
     def testCorrectText(self):

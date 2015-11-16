@@ -45,7 +45,6 @@ from pywinauto.timings import Timings, TimeoutError, WaitUntil
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.unittests import PywinautoTestCase
 
-Timings.Fast()
 #application.set_timing(1, .01, 1, .01, .05, 0, 0, .1, 0, .01)
 
 # About dialog may take some time to load

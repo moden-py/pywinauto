@@ -38,7 +38,7 @@ except ImportError:
 SCREENSHOTMASK = "scr-{name}.jpg"
 
 
-class PywinautoTestCase(unittest.TestCase):
+class PywinautoTestCase0(unittest.TestCase):
 
     """
     Base class for pywinauto testing.
@@ -55,17 +55,16 @@ class PywinautoTestCase(unittest.TestCase):
             return None
 
         if nose and isinstance(self._result, nose.proxy.ResultProxy):
-            test_failures = filter(lambda i: i[0].test == self, self._result.failures)
-            test_errors = filter(lambda i: i[0].test == self, self._result.errors)
+            test_failures = [failure for failure in self._result.failures
+                             if failure[0].test == self]
+            test_errors = [error for error in self._result.errors
+                           if error[0].test == self]
         else:
-            test_failures = filter(lambda i: i[0] == self, self._result.failures)
-            test_errors = filter(lambda i: i[0] == self, self._result.errors)
-        # test_expected_failures = filter(lambda i: i[0] == self,
-        #                                self.__result.expectedFailures)
-        # test_unexpected_successes = filter(lambda i: i == self,
-        #                                    self.__result.unexpectedSuccesses)
+            test_failures = [failure for failure in self._result.failures
+                             if failure[0] == self]
+            test_errors = [error for error in self._result.errors
+                           if error[0] == self]
 
-        # if test_failures or test_errors or test_expected_failures or test_unexpected_successes:
         if test_failures or test_errors:
             return False
         else:
@@ -117,3 +116,59 @@ class PywinautoTestCase(unittest.TestCase):
         else:
             with open('successful'+self._testMethodName, 'w'):
                 pass
+
+
+class PywinautoTestCase2(unittest.TestCase):
+
+    def __getattribute__(self, item):
+        print(item)
+        try:
+            return super(PywinautoTestCase2, self).__getattribute__(item)
+        except Exception as e:
+            print('!!!exception %s' % type(e))
+            raise
+
+
+def screenshot_on_fail(cls):
+    def creation(*args, **kwargs):
+        instance = cls(*args, **kwargs)
+
+        print(instance._testMethodName)
+
+        return instance
+    return creation
+
+
+class PywinautoTestCase(unittest.TestCase):
+
+
+    def _proxify(self, method_name):
+        original = getattr(self, method_name)
+
+        def proxy(*args, **kwargs):
+            try:
+                original_return = original(*args, **kwargs)
+            except:
+                if self._testMethodName == method_name:
+                    # test body
+                    name = method_name
+                else:
+                    name = "{test_name}_{method_name}".format(test_name=self._testMethodName,
+                                                              method_name=method_name)
+                if ImageGrab:
+                    ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
+                raise
+            else:
+                return original_return
+
+        setattr(self, method_name, proxy)
+
+    def __init__(self, *args, **kwargs):
+        super(PywinautoTestCase, self).__init__(*args, **kwargs)
+
+        self._proxify(self._testMethodName)
+        self._proxify('setUp')
+        self._proxify('tearDown')
+
+
+

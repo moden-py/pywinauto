@@ -23,6 +23,7 @@
 """pywinauto base test class"""
 
 import subprocess
+import pyscreenshot
 import unittest
 
 try:
@@ -43,8 +44,9 @@ def save_screenshot(name):
     to be sure a screenshot named according the CI config.
     """
 
-    if ImageGrab is not None:
-        ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
+    # if ImageGrab is not None:
+    #     ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
+    pyscreenshot.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
 
 
 class PywinautoTestCase(unittest.TestCase):
@@ -95,9 +97,9 @@ class PywinautoTestCase(unittest.TestCase):
                         test_name=self._testMethodName,
                         method_name=method_name)
 
-                #save_screenshot(name)
-                subprocess.call(["python", "-c",
-                                 "from pywinauto import unittests;unittests.save_screenshot('{name}')".format(name=name)])
+                save_screenshot(name)
+                # subprocess.call(["python", "-c",
+                #                  "from pywinauto import unittests;unittests.save_screenshot('{name}')".format(name=name)])
 
         # replace the original method by own handler
         setattr(self, method_name, proxy)

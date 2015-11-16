@@ -3,3 +3,4 @@ pypiwin32
 Pillow==2.7.0
 coverage
 codecov
+pyscreenshot

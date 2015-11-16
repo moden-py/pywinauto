@@ -67,6 +67,7 @@ class ActionloggerTestCases(PywinautoTestCase):
             return len(f.readlines())
 
     def testEnableDisable(self):
+        self.assertTrue(False)  # test screenshots
         actionlogger.enable()
         prev_line_count = self.__lineCount()
         self.app.UntitledNotepad.TypeKeys('Test pywinauto logging', with_spaces=True)

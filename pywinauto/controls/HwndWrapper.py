@@ -1565,12 +1565,11 @@ class HwndWrapper(object):
 
     #-----------------------------------------------------------
     def SetFocus(self):
-
         """
         Set the focus to this control.
+
         Bring the window to the foreground first if necessary.
         """
-
         # find the current foreground window
         cur_foreground = win32gui.GetForegroundWindow()
 
@@ -1593,10 +1592,6 @@ class HwndWrapper(object):
                                                cur_fore_thread,
                                                1)
 
-                self.actions.log('Call SetForegroundWindow within attached '
-                                 'threads - {0} & {1}.'.format(control_thread,
-                                                               cur_fore_thread,
-                                                               ))
                 win32gui.SetForegroundWindow(self.handle)
 
                 # ensure foreground window has changed to the target
@@ -1620,7 +1615,6 @@ class HwndWrapper(object):
                                                    0)
             else:
                 # same threads - just set the foreground window
-                self.actions.log('Call SetForegroundWindow within one thread.')
                 win32gui.SetForegroundWindow(self.handle)
 
             # make sure that we are idle before returning

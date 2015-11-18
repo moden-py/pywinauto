@@ -62,6 +62,8 @@ The Following are the individual timing settings that can be adjusted:
 * after_windowclose_retry (default .5)
 
 * after_setfocus_wait   (default .06)
+* setfocus_timeout   (default 2)
+* setfocus_retry   (default .1)
 
 * after_setcursorpos_wait   (default .01)
 
@@ -133,7 +135,7 @@ class TimeConfig(object):
 
         'after_setfocus_wait': .06,
         'setfocus_timeout': 2,
-        'setfocus_retry': .2,
+        'setfocus_retry': .1,
 
         'after_setcursorpos_wait' : .01,
 

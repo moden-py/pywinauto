@@ -24,6 +24,7 @@
 
 import subprocess
 import pyscreenshot
+import ctypes
 import time
 import unittest
 
@@ -67,10 +68,25 @@ def save_screenshot(name):
 
     app = Application().Connect(class_name='Shell_TrayWnd')
     shelltraywnd = app.Shell_TrayWnd
-    shelltraywnd.TypeKeys("{PRTSC}")
+    #shelltraywnd.TypeKeys("{PRTSC}")
+
+    class MARGINS(ctypes.Structure):
+        _fields_ = [("cxLeftWidth", ctypes.c_int),
+                  ("cxRightWidth", ctypes.c_int),
+                  ("cyTopHeight", ctypes.c_int),
+                  ("cyBottomHeight", ctypes.c_int)
+                 ]
+
+    margins = MARGINS(1, 2, 1, 1)
+
+    dwm = ctypes.windll.dwmapi
+    dwm.DwmExtendFrameIntoClientArea(shelltraywnd.handle, ctypes.byref(margins))
+
+
     time.sleep(.5)
-    im = ImageGrab.grabclipboard()
-    im.save(SCREENSHOTMASK.format(name=name), "JPEG")
+    # im = ImageGrab.grabclipboard()
+    # im.save(SCREENSHOTMASK.format(name=name), "JPEG")
+    ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
 
 
 

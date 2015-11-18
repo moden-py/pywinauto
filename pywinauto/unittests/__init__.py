@@ -24,6 +24,7 @@
 
 import subprocess
 import pyscreenshot
+import time
 import unittest
 
 try:
@@ -44,8 +45,8 @@ def save_screenshot(name):
     to be sure a screenshot named according the CI config.
     """
 
-    if ImageGrab is not None:
-        ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
+    # if ImageGrab is not None:
+    #     ImageGrab.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
     # pyscreenshot.grab().save(SCREENSHOTMASK.format(name=name), "JPEG")
     # import win32gui, win32ui, win32con, win32api
     # hwin = win32gui.GetDesktopWindow()
@@ -61,6 +62,16 @@ def save_screenshot(name):
     # memdc.SelectObject(bmp)
     # memdc.BitBlt((0, 0), (width, height), srcdc, (left, top), win32con.SRCCOPY)
     # bmp.SaveBitmapFile(memdc, SCREENSHOTMASK.format(name=name))
+
+    from pywinauto.application import Application
+
+    app = Application().Connect(class_name='Shell_TrayWnd')
+    shelltraywnd = app.Shell_TrayWnd
+    shelltraywnd.TypeKeys("{PRTSC}")
+    time.sleep(.5)
+    im = ImageGrab.grabclipboard()
+    im.save(SCREENSHOTMASK.format(name=name), "JPEG")
+
 
 
 class PywinautoTestCase(unittest.TestCase):

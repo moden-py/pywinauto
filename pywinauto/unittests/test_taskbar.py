@@ -35,7 +35,6 @@ from pywinauto.sysinfo import is_x64_Python, \
 from pywinauto import win32defines
 from pywinauto.timings import WaitUntil
 import pywinauto.actionlogger
-from pywinauto.unittests import PywinautoTestCase, save_screenshot
 
 #pywinauto.actionlogger.enable()
 mfc_samples_folder = os.path.join(
@@ -43,11 +42,8 @@ mfc_samples_folder = os.path.join(
 if is_x64_Python():
     mfc_samples_folder = os.path.join(mfc_samples_folder, 'x64')
 
-
 _ready_timeout = 30
 _retry_interval = 0.5
-
-
 def _toggle_notification_area_icons(show_all=True, debug_img=None):
     """
     A helper function to change 'Show All Icons' settings.
@@ -105,7 +101,8 @@ def _toggle_notification_area_icons(show_all=True, debug_img=None):
 
     except Exception as e:
         if debug_img:
-            save_screenshot(debug_img)
+            from PIL import ImageGrab
+            ImageGrab.grab().save("%s.jpg" % (debug_img), "JPEG")
         l = pywinauto.actionlogger.ActionLogger()
         l.log("RuntimeError in _toggle_notification_area_icons")
         raise e
@@ -115,7 +112,6 @@ def _toggle_notification_area_icons(show_all=True, debug_img=None):
         window.Close()
 
     return cur_state
-
 
 def _wait_minimized(dlg):
     '''
@@ -131,14 +127,12 @@ def _wait_minimized(dlg):
         func = lambda: (dlg.GetShowState() == win32defines.SW_SHOWMINIMIZED))
     return True
 
-
-class TaskbarTestCases(PywinautoTestCase):
+class TaskbarTestCases(unittest.TestCase):
     "Unit tests for the taskbar"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
         self.tm = _ready_timeout
         app = Application()
         app.start(os.path.join(mfc_samples_folder, u"TrayMenu.exe"))
@@ -148,7 +142,6 @@ class TaskbarTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
         self.dlg.WaitNot('ready')
 
@@ -332,7 +325,6 @@ class TaskbarTestCases(PywinautoTestCase):
 
         # close the second sample app
         dlg2.SendMessage(win32defines.WM_CLOSE)
-
 
 if __name__ == "__main__":
     unittest.main()

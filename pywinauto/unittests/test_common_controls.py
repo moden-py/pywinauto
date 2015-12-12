@@ -42,7 +42,6 @@ from pywinauto.sysinfo import is_x64_Python
 from pywinauto.RemoteMemoryBlock import AccessDenied
 from pywinauto.RemoteMemoryBlock import RemoteMemoryBlock
 from pywinauto.actionlogger import ActionLogger
-from pywinauto.unittests import PywinautoTestCase
 
 
 controlspy_folder = os.path.join(
@@ -54,18 +53,18 @@ if is_x64_Python():
     mfc_samples_folder = os.path.join(mfc_samples_folder, 'x64')
 
 
-class RemoteMemoryBlockTestCases(PywinautoTestCase):
+class RemoteMemoryBlockTestCases(unittest.TestCase):
     def test__init__fail(self):
         self.assertRaises(AccessDenied, RemoteMemoryBlock, 0)
 
 
-class ListViewTestCases(PywinautoTestCase):
+class ListViewTestCases(unittest.TestCase):
     "Unit tests for the ListViewWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -86,12 +85,13 @@ class ListViewTestCases(PywinautoTestCase):
         self.ctrl = app.RowListSampleApplication.ListView.WrapperObject()
         self.dlg.Toolbar.Button(0).Click() # switch to icon view
         self.dlg.Toolbar.Button(6).Click() # switch off states
+        
 
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
+
 
     def testFriendlyClass(self):
         "Make sure the ListView friendly class is set correctly"
@@ -450,13 +450,13 @@ class ListViewTestCases(PywinautoTestCase):
         self.assertNotEqual(item1, item2)
 
 
-class TreeViewTestCases(PywinautoTestCase):
+class TreeViewTestCases(unittest.TestCase):
     "Unit tests for the TreeViewWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -490,7 +490,6 @@ class TreeViewTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -500,6 +499,7 @@ class TreeViewTestCases(PywinautoTestCase):
     def testItemCount(self):
         "Test the TreeView ItemCount method"
         self.assertEquals (self.ctrl.ItemCount(), 37)
+
 
     def testGetItem(self):
         "Test the GetItem method"
@@ -519,6 +519,7 @@ class TreeViewTestCases(PywinautoTestCase):
                 ["The Planets", "Venus", "4.869"]).Text(),
             self.texts[1][3] + " kg")
 
+
     def testItemText(self):
         "Test the TreeView item Text() method"
 
@@ -535,6 +536,7 @@ class TreeViewTestCases(PywinautoTestCase):
 
         self.assertEquals(True, self.ctrl.IsSelected((0, 1, 2)))
 
+
     def testEnsureVisible(self):
         "make sure that the item is visible"
 
@@ -544,6 +546,7 @@ class TreeViewTestCases(PywinautoTestCase):
 
         # make sure that the item is not hidden
         self.assertNotEqual(None, self.ctrl.GetItem((0, 8, 2)).Rectangle())
+
 
     def testGetProperties(self):
         "Test getting the properties for the treeview control"
@@ -591,13 +594,13 @@ class TreeViewTestCases(PywinautoTestCase):
         self.assertEquals(False, self.ctrl.IsSelected(mercury_diam_item_path))
 
 
-class TreeViewAdditionalTestCases(PywinautoTestCase):
+class TreeViewAdditionalTestCases(unittest.TestCase):
     "More unit tests for the TreeViewWrapper class (CmnCtrl1.exe)"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         from pywinauto.application import Application
         self.app = Application().start(os.path.join(mfc_samples_folder, "CmnCtrl1.exe"))
@@ -607,7 +610,6 @@ class TreeViewAdditionalTestCases(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        
         self.dlg.Close()
         self.app.kill_()
 
@@ -685,13 +687,13 @@ class TreeViewAdditionalTestCases(PywinautoTestCase):
         self.assertEquals(new_pigeon.Children(), [])
 
 
-class HeaderTestCases(PywinautoTestCase):
+class HeaderTestCases(unittest.TestCase):
     "Unit tests for the Header class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -712,10 +714,10 @@ class HeaderTestCases(PywinautoTestCase):
         self.dlg = app.RowListSampleApplication #top_window_()
         self.ctrl = app.RowListSampleApplication.Header.WrapperObject()
 
+
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -768,13 +770,15 @@ class HeaderTestCases(PywinautoTestCase):
                 self.ctrl.GetColumnText(i))
 
 
-class StatusBarTestCases(PywinautoTestCase):
+
+
+class StatusBarTestCases(unittest.TestCase):
     "Unit tests for the TreeViewWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -800,7 +804,6 @@ class StatusBarTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -823,6 +826,7 @@ class StatusBarTestCases(PywinautoTestCase):
 
         for prop_name in props:
             self.assertEquals(getattr(self.ctrl, prop_name)(), props[prop_name])
+
 
     def testBorderWidths(self):
         "Make sure the border widths are retrieved correctly"
@@ -878,13 +882,18 @@ class StatusBarTestCases(PywinautoTestCase):
             self.assertEquals(text, self.ctrl.GetPartText(i))
 
 
-class TabControlTestCases(PywinautoTestCase):
+
+
+
+
+
+
+class TabControlTestCases(unittest.TestCase):
     "Unit tests for the TreeViewWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
         self.screen_w = win32api.GetSystemMetrics(0)
 
         # start the application
@@ -919,7 +928,6 @@ class TabControlTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1004,6 +1012,7 @@ class TabControlTestCases(PywinautoTestCase):
 #        print(self.ctrl.TabStates())
 #        raise "tabstates hiay"
 
+
     def testGetTabText(self):
         for i, text in enumerate(self.texts):
             self.assertEquals(text, self.ctrl.GetTabText(i))
@@ -1025,13 +1034,17 @@ class TabControlTestCases(PywinautoTestCase):
         self.assertRaises(IndexError, self.ctrl.Select, 99)
 
 
-class ToolbarTestCases(PywinautoTestCase):
+
+
+
+
+class ToolbarTestCases(unittest.TestCase):
     "Unit tests for the ToolbarWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -1063,7 +1076,6 @@ class ToolbarTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1131,6 +1143,7 @@ class ToolbarTestCases(PywinautoTestCase):
         self.assertEquals(u"Pencil" in tt,True)
         self.assertEquals(u"Ellipse" in tt,True)
 
+
     def testPressButton(self):
 
         self.ctrl.PressButton(0)
@@ -1169,7 +1182,7 @@ class ToolbarTestCases(PywinautoTestCase):
         self.assertEquals(self.ctrl.Button('About', exact=False, by_tooltip=True).Text(), 'About')
 
 
-class RebarTestCases(PywinautoTestCase):
+class RebarTestCases(unittest.TestCase):
     "Unit tests for the UpDownWrapper class"
 
     def setUp(self):
@@ -1182,7 +1195,7 @@ class RebarTestCases(PywinautoTestCase):
         A findbestmatch proc does well here with guessing the title 
         even though the app is started with a short title "RebarTest".
         """
-        
+
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -1204,7 +1217,6 @@ class RebarTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1254,14 +1266,14 @@ class RebarTestCases(PywinautoTestCase):
         self.app.Window_(title='About RebarTest').WaitNot('visible')
 
 
-class DatetimeTestCases(PywinautoTestCase):
+class DatetimeTestCases(unittest.TestCase):
     "Unit tests for the DateTimePicker class"
 
     def setUp(self):
         """
         Start the application and get 'Date Time Picker' control.
         """
-        
+
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -1277,7 +1289,6 @@ class DatetimeTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1330,13 +1341,13 @@ class DatetimeTestCases(PywinautoTestCase):
         self.assertEqual(test_date_time.wMilliseconds, milliseconds)
 
 
-class ToolTipsTestCases(PywinautoTestCase):
+class ToolTipsTestCases(unittest.TestCase):
     "Unit tests for the tooltips class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         self.texts = [u'', u'New', u'Open', u'Save', u'Cut', u'Copy', u'Paste', u'Print', u'About', u'Help']
 
         # start the application
@@ -1377,7 +1388,6 @@ class ToolTipsTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.app.kill_()
 
     def testFriendlyClass(self):
@@ -1416,13 +1426,14 @@ class ToolTipsTestCases(PywinautoTestCase):
         self.assertEquals(self.ctrl.Texts()[1:], self.texts)
 
 
-class UpDownTestCases(PywinautoTestCase):
+
+class UpDownTestCases(unittest.TestCase):
     "Unit tests for the UpDownWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         from pywinauto.application import Application
         app = Application()
@@ -1443,7 +1454,6 @@ class UpDownTestCases(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         self.dlg.SendMessage(win32defines.WM_CLOSE)
 
     def testFriendlyClass(self):
@@ -1503,6 +1513,7 @@ class UpDownTestCases(PywinautoTestCase):
         "Test getting the buddy control"
         self.assertEquals (self.ctrl.GetBuddyControl().handle, self.dlg.Edit6.handle)
 
+
     def testIncrement(self):
         "Test incremementing up-down position"
         self.ctrl.Increment()
@@ -1513,6 +1524,9 @@ class UpDownTestCases(PywinautoTestCase):
         self.ctrl.SetValue(23)
         self.ctrl.Decrement()
         self.assertEquals (self.ctrl.GetValue(), 22)
+
+
+
 
 
 if __name__ == "__main__":

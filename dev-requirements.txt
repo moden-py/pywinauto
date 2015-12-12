@@ -1,5 +1,5 @@
 pypiwin32
 Pillow==3.0.0
 coverage
-snose
+nose
 codecov

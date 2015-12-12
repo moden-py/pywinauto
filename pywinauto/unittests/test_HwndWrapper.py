@@ -46,7 +46,6 @@ from pywinauto.sysinfo import is_x64_Python, is_x64_OS
 from pywinauto.RemoteMemoryBlock import RemoteMemoryBlock
 from pywinauto.timings import Timings, TimeoutError
 from pywinauto import clipboard
-from pywinauto.unittests import PywinautoTestCase
 
 import unittest
 
@@ -56,7 +55,6 @@ mfc_samples_folder = os.path.join(
 if is_x64_Python():
     mfc_samples_folder = os.path.join(mfc_samples_folder, 'x64')
 
-
 def _notepad_exe():
     if is_x64_Python() or not is_x64_OS():
         return r"C:\Windows\System32\notepad.exe"
@@ -64,13 +62,13 @@ def _notepad_exe():
         return r"C:\Windows\SysWOW64\notepad.exe"
 
 
-class HwndWrapperTests(PywinautoTestCase):
+class HwndWrapperTests(unittest.TestCase):
     "Unit tests for the TreeViewWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         self.app = Application()
         if is_x64_Python() or not is_x64_OS():
@@ -85,7 +83,6 @@ class HwndWrapperTests(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         #self.dlg.TypeKeys("%{F4}")
         #self.dlg.Close()
         self.app.kill_()
@@ -495,13 +492,13 @@ class HwndWrapperTests(PywinautoTestCase):
         self.assertEquals(self.dlg.IsVisible(), True)
 
 
-class HwndWrapperMouseTests(PywinautoTestCase):
+class HwndWrapperMouseTests(unittest.TestCase):
     "Unit tests for mouse actions of the HwndWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         self.app = Application().start(os.path.join(mfc_samples_folder, u"CmnCtrl3.exe"))
 
@@ -511,7 +508,7 @@ class HwndWrapperMouseTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        
+
         # close the application
         try:
             self.dlg.Close(0.5)
@@ -584,13 +581,13 @@ class HwndWrapperMouseTests(PywinautoTestCase):
         self.assertRaises(ValueError, self.dlg.SetTransparency, 256)
 
 
-class NotepadRegressionTests(PywinautoTestCase):
+class NotepadRegressionTests(unittest.TestCase):
     "Regression unit tests for Notepad"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         self.app = Application()
         self.app.start(_notepad_exe())
@@ -601,9 +598,10 @@ class NotepadRegressionTests(PywinautoTestCase):
 
         self.app2 = Application().start(_notepad_exe())
 
+
     def tearDown(self):
         "Close the application after tests"
-        
+
         # close the application
         try:
             self.dlg.Close(0.5)
@@ -645,13 +643,13 @@ class NotepadRegressionTests(PywinautoTestCase):
         self.assertEquals(self.dlg.Edit.TextBlock().encode(locale.getpreferredencoding()), text*3)
 
 
-class DragAndDropTests(PywinautoTestCase):
+class DragAndDropTests(unittest.TestCase):
     "Unit tests for mouse actions like drag-n-drop"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         self.app = Application()
         self.app.start(os.path.join(mfc_samples_folder, u"CmnCtrl1.exe"))
@@ -661,7 +659,6 @@ class DragAndDropTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        
         self.app.kill_()
 
     '''
@@ -686,13 +683,13 @@ class DragAndDropTests(PywinautoTestCase):
         self.assertEquals([child.Text() for child in dogs.Children()], [u'Birds', u'Dalmatian', u'German Shepherd', u'Great Dane'])
 
 
-class GetDialogPropsFromHandleTest(PywinautoTestCase):
+class GetDialogPropsFromHandleTest(unittest.TestCase):
     "Unit tests for mouse actions of the HwndWrapper class"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         self.app = Application()
         if is_x64_Python() or not is_x64_OS():
@@ -706,10 +703,10 @@ class GetDialogPropsFromHandleTest(PywinautoTestCase):
     def tearDown(self):
         "Close the application after tests"
         # close the application
-        
         #self.dlg.TypeKeys("%{F4}")
         self.dlg.Close(0.5)
         self.app.kill_()
+
 
     def test_GetDialogPropsFromHandle(self):
         "Test some small stuff regarding GetDialogPropsFromHandle"
@@ -723,13 +720,13 @@ class GetDialogPropsFromHandleTest(PywinautoTestCase):
         self.assertEquals(props_from_handle, props_from_dialog)
 
 
-class RemoteMemoryBlockTests(PywinautoTestCase):
+class RemoteMemoryBlockTests(unittest.TestCase):
     "Unit tests for RemoteMemoryBlock"
 
     def setUp(self):
         """Start the application set some data and ensure the application
         is in the state we want it."""
-        
+
         # start the application
         self.app = Application()
         self.app.start(os.path.join(mfc_samples_folder, u"CmnCtrl1.exe"))
@@ -739,7 +736,6 @@ class RemoteMemoryBlockTests(PywinautoTestCase):
 
     def tearDown(self):
         "Close the application after tests"
-        
         self.app.kill_()
 
     def testGuardSignatureCorruption(self):

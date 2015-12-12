@@ -31,14 +31,12 @@ import sys
 sys.path.append(".")
 from pywinauto import findbestmatch
 from pywinauto import win32structures
-from pywinauto.unittests import PywinautoTestCase
 
 
-class TestFindBestMatch(PywinautoTestCase):
+class TestFindBestMatch(unittest.TestCase):
 
     def setUp(self):
         # load the test strings
-        
         self.strings = open(os.path.join(test_path, "testtext.txt"), "rb").readlines()
         self.strings = (line.decode('utf-8')[:-1] for line in self.strings)
 
@@ -64,8 +62,7 @@ class DummyCtrl():
     def Rectangle(self):
         return self.rect
 
-
-class TestIsAboveOrToLeft(PywinautoTestCase):
+class TestIsAboveOrToLeft(unittest.TestCase):
     def testSameRect(self):
         "both rectangles are the same so false"
         other = DummyCtrl(10, 20, 200, 40)
@@ -109,6 +106,7 @@ class TestIsAboveOrToLeft(PywinautoTestCase):
         result = findbestmatch.IsAboveOrToLeft(this, other)
         self.assertEqual(result, False)
 
+
     def testTopLeftInSideControl(self):
         other = DummyCtrl(15, 25, 120, 40)
         this = DummyCtrl(10, 20, 20, 40)
@@ -118,4 +116,7 @@ class TestIsAboveOrToLeft(PywinautoTestCase):
 
 
 if __name__ == "__main__":
+
     unittest.main()
+
+

@@ -150,6 +150,7 @@ class ApplicationTestCases(PywinautoTestCase):
         self.prev_warn = warnings.showwarning
         def no_warnings(*args, **kwargs): pass
         warnings.showwarning = no_warnings
+
         if is_x64_Python() or not is_x64_OS():
             self.notepad_subpath = r"system32\notepad.exe"
         else:
@@ -204,7 +205,6 @@ class ApplicationTestCases(PywinautoTestCase):
 
     def testStart_bug01(self):
         "On SourceForge forum AppStartError forgot to include %s for application name"
-
         app = Application()
         self.assertEqual(app.process, None)
         application.app_start_timeout = 1
@@ -386,7 +386,7 @@ class ApplicationTestCases(PywinautoTestCase):
         
         app = Application().Start(r'explorer.exe')
         WaitUntil(30, 0.5, lambda: len(findwindows.find_windows(active_only=True, class_name='CabinetWClass')) > 0)
-        handle = findwindows.find_windows(active_only=True, class_name='CabinetWClass')[-1]
+        handle = findwindows.find_windows(active_only=True, class_name='CabinetWClass')[-1].handle
         window = WindowSpecification({'handle': handle, })
         explorer = Application().Connect(process=window.ProcessID())
         
@@ -395,7 +395,7 @@ class ApplicationTestCases(PywinautoTestCase):
             window.Edit.SetEditText(r'Control Panel\Programs\Programs and Features')
             window.TypeKeys(r'{ENTER 2}', set_foreground=False)
             WaitUntil(30, 0.5, lambda: len(findwindows.find_windows(active_only=True, title='Programs and Features', class_name='CabinetWClass')) > 0)
-            explorer.WaitCPUUsageLower(threshold=2.5, timeout=40)
+            explorer.WaitCPUUsageLower(threshold=2.5, timeout=40, usage_interval=2)
             installed_programs = window.FolderView.Texts()[1:]
             programs_list = ','.join(installed_programs)
             if ('Microsoft' not in programs_list) and ('Python' not in programs_list):
@@ -430,7 +430,6 @@ class ApplicationTestCases(PywinautoTestCase):
 
     def testWindow(self):
         "Test that window_() works correctly"
-
         app = Application()
         app.start(_notepad_exe())
 

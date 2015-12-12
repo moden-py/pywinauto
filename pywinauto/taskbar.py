@@ -33,7 +33,7 @@ warnings.warn("The taskbar module is still very experimental", FutureWarning)
 
 def TaskBarHandle():
     "Return the first window that has a class name 'Shell_TrayWnd'"
-    return findwindows.find_windows(class_name = "Shell_TrayWnd")[0]
+    return findwindows.find_windows(class_name = "Shell_TrayWnd")[0].handle
 
 
 def _click_hidden_tray_icon(reqd_button, mouse_button = 'left', exact = False, by_tooltip = False, double = False):
@@ -102,4 +102,3 @@ except Exception:
 
 # the hidden tray icons button (TODO: think how to optimize)
 ShowHiddenIconsButton = [ch for ch in TaskBar.Children() if ch.FriendlyClassName() == 'Button'][-1] #TaskBar.Button #added
-

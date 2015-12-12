@@ -70,7 +70,7 @@ def _toggle_notification_area_icons(show_all=True, debug_img=None):
 
     WaitUntil(_ready_timeout, _retry_interval, _cabinetwclass_exist)
     handle = findwindows.find_windows(active_only=True,
-                                      class_name=class_name)[-1]
+                                      class_name=class_name)[-1].handle
     window = WindowSpecification({'handle': handle, })
     explorer = Application().Connect(process=window.ProcessID())
     cur_state = None
@@ -165,7 +165,6 @@ class TaskbarTestCases(PywinautoTestCase):
             l.log("No more leftovers. All good.")
             pass
 
-
     def testTaskbar(self):
         # just make sure it's found
         taskbar.TaskBar.Wait('visible', timeout=self.tm)
@@ -206,7 +205,7 @@ class TaskbarTestCases(PywinautoTestCase):
 
         # Close the applet with Esc, we don't click again on it because
         # the second click sometimes doesn't hide a clock but just relaunch it
-        taskbar.Clock.TypeKeys("{ESC}")
+        taskbar.Clock.TypeKeys("{ESC}", set_foreground=False)
         ClockWindow.WaitNot('visible', timeout=self.tm)
 
     def testClickVisibleIcon(self):

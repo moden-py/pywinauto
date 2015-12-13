@@ -366,6 +366,7 @@ class ApplicationTestCases(unittest.TestCase):
         app.UntitledNotepad.MenuSelect("File->Exit")
         app.UntitledNotepad.WaitNot('exists')
         save_screenshot('step4')
+        self.assertFalse(True)
         self.assertRaises(RuntimeError, app.top_window_)
 
     def testActiveWindow(self):

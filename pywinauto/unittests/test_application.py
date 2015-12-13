@@ -43,6 +43,7 @@ from pywinauto.application import ProcessNotFoundError, AppStartError, AppNotCon
 from pywinauto import findwindows, findbestmatch
 from pywinauto.timings import Timings, TimeoutError, WaitUntil
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
+from pywinauto.unittests import save_screenshot
 
 #application.set_timing(1, .01, 1, .01, .05, 0, 0, .1, 0, .01)
 
@@ -347,21 +348,24 @@ class ApplicationTestCases(unittest.TestCase):
             Application().connect, **{'path': "no app here"})
 
     def testTopWindow(self):
+        save_screenshot('step1')
         "Test that top_window_() works correctly"
         app = Application()
         self.assertRaises(AppNotConnected, app.top_window_)
         
         app.start(_notepad_exe())
+        save_screenshot('step2')
 
         self.assertEqual(app.UntitledNotepad.handle, app.top_window_().handle)
 
         app.UntitledNotepad.MenuSelect("Help->About Notepad")
 
         self.assertEqual(app.AboutNotepad.handle, app.top_window_().handle)
-
+        save_screenshot('step3')
         app.AboutNotepad.Ok.Click()
         app.UntitledNotepad.MenuSelect("File->Exit")
         app.UntitledNotepad.WaitNot('exists')
+        save_screenshot('step4')
         self.assertRaises(RuntimeError, app.top_window_)
 
     def testActiveWindow(self):

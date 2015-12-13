@@ -43,6 +43,7 @@ from pywinauto.application import ProcessNotFoundError, AppStartError, AppNotCon
 from pywinauto import findwindows, findbestmatch
 from pywinauto.timings import Timings, TimeoutError, WaitUntil
 from pywinauto.sysinfo import is_x64_Python, is_x64_OS
+from pywinauto.unittests import AutoScreenshotTestCase
 
 #application.set_timing(1, .01, 1, .01, .05, 0, 0, .1, 0, .01)
 
@@ -138,7 +139,7 @@ class ApplicationWarningTestCases(unittest.TestCase):
         self.assertEquals(warn_text in str(warns[-1].message), True)
 
 
-class ApplicationTestCases(unittest.TestCase):
+class ApplicationTestCases(AutoScreenshotTestCase):
     "Unit tests for the application.Application class"
 
     def setUp(self):
@@ -347,6 +348,8 @@ class ApplicationTestCases(unittest.TestCase):
             Application().connect, **{'path': "no app here"})
 
     def testTopWindow(self):
+
+        self.assertFalse(True)
         "Test that top_window_() works correctly"
         app = Application()
         self.assertRaises(AppNotConnected, app.top_window_)
@@ -365,6 +368,7 @@ class ApplicationTestCases(unittest.TestCase):
         self.assertRaises(RuntimeError, app.top_window_)
 
     def testActiveWindow(self):
+        self.assertFalse(True)
         "Test that active_() works correctly"
         app = Application()
         self.assertRaises(AppNotConnected, app.active_)

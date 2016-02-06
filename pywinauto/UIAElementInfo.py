@@ -95,7 +95,10 @@ class UIAElementInfo(ElementInfo):
     @property
     def processId(self):
         "Return ProcessId of element"
-        return self._element.CurrentProcessId
+        try:
+            return self._element.CurrentProcessId
+        except:
+            return 0
 
     @property
     def frameworkId(self):

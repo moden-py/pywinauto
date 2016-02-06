@@ -46,7 +46,7 @@ class RemoteMemoryBlock(object):
         self.size = size
         self.process = 0
         
-        if handle == 0xffffffff80000000:
+        if handle.handle == 0xffffffff80000000:
             raise Exception('Incorrect handle: ' + str(handle))
 
         self._as_parameter_ = self.memAddress

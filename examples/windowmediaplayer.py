@@ -37,7 +37,7 @@ except ImportError:
     from pywinauto import application
 
 
-def WindowsMedia():
+def windows_media():
 
     app = application.Application()
 
@@ -52,8 +52,8 @@ def WindowsMedia():
     app.WindowsMediaPlayer.MenuSelect("View->GoTo->Library")
     app.WindowsMediaPlayer.MenuSelect("View->Choose Columns")
 
-    #for ctrl in app.ChooseColumns.Children():
-    #    print ctrl.Class()
+    #for ctrl in app.ChooseColumns.children():
+    #    print ctrl.class_name()
 
 
     print("Is it checked already:", app.ChooseColumsn.ListView.IsChecked(1))
@@ -77,12 +77,12 @@ def WindowsMedia():
     app.WindowsMediaPlayer.MenuSelect("File->Exit")
 
 
-def Main():
+def main():
     start = time.time()
 
-    WindowsMedia()
+    windows_media()
 
     print("Total time taken:", time.time() - start)
 
 if __name__ == "__main__":
-    Main()
+    main()

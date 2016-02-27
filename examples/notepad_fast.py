@@ -43,7 +43,7 @@ from pywinauto import tests
 
 from pywinauto.timings import Timings
 
-def RunNotepad():
+def run_notepad():
     "Run notepad and do some small stuff with it"
     print("Run with option 'language' e.g. notepad_fast.py language to use")
     print("application data. This should work on any language Windows/Notepad")
@@ -223,11 +223,11 @@ def RunNotepad():
     #    "Insert Unicode control character -> IAFS", app.Notepad.ctrl_())
     #time.sleep(1)
 
-    #app.Notepad.Edit.TypeKeys("{ESC}")
+    #app.Notepad.Edit.type_keys("{ESC}")
 
     # the following shows that Sendtext does not accept
     # accented characters - but does allow 'control' characters
-    app.Notepad.Edit.TypeKeys(u"{END}{ENTER}SendText d\xf6\xe9s "
+    app.Notepad.Edit.type_keys(u"{END}{ENTER}SendText d\xf6\xe9s "
         u"s\xfcpp\xf4rt \xe0cce\xf1ted characters!!!", with_spaces = True)
 
     # Try and save
@@ -268,4 +268,4 @@ def RunNotepad():
     print("That took %.3f to run"% (time.time() - start))
 
 if __name__ == "__main__":
-    RunNotepad()
+    run_notepad()

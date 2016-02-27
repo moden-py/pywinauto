@@ -54,11 +54,19 @@ in almost exactly the same ways. ::
   :func:`WindowSpecification.Window`
 
 """
+from __future__ import print_function
 
-import time
 import os.path
-import warnings
 import pickle
+import time
+import warnings
+
+import win32process
+import win32api
+import win32gui
+import win32con
+import win32event
+import multiprocessing
 
 
 #from . import win32functions
@@ -68,13 +76,11 @@ from . import findbestmatch
 from . import findwindows
 from . import handleprops
 from . import backend
-from .controls.BaseWrapper import BaseWrapper
-
-import win32process, win32api, win32gui, win32con, win32event, multiprocessing
+from .backend import registry
 
 from .actionlogger import ActionLogger
 from .timings import Timings, WaitUntil, TimeoutError, WaitUntilPasses
-from .sysinfo import is_x64_Python, UIA_support
+from .sysinfo import is_x64_Python
 
 
 class AppStartError(Exception):
@@ -88,6 +94,11 @@ class ProcessNotFoundError(Exception):
 class AppNotConnected(Exception):
     "Application has been connected to a process yet"
     pass    #pragma: no cover
+
+
+# Display User and Deprecation warnings every time
+for warning in (UserWarning, PendingDeprecationWarning):
+    warnings.simplefilter('always', warning)
 
 
 #wait_method_deprecation = "Wait* functions are just simple wrappers around " \
@@ -106,9 +117,9 @@ class WindowSpecification(object):
     """
 
     WAIT_CRITERIA_MAP = {'exists': ('Exists',),
-                         'visible': ('IsVisible',),
-                         'enabled': ('IsEnabled',),
-                         'ready': ('IsVisible', 'IsEnabled',),
+                         'visible': ('is_visible',),
+                         'enabled': ('is_enabled',),
+                         'ready': ('is_visible', 'is_enabled',),
                          'active': ('IsActive',),
                          }
 
@@ -127,8 +138,8 @@ class WindowSpecification(object):
 
         if "best_match" in self.criteria[-1]:
             raise AttributeError(
-                "WindowSpecification class has no '%s' method" %
-                self.criteria[-1]['best_match'])
+                "WindowSpecification class has no '{0}' method".\
+                format(self.criteria[-1]['best_match']) )
 
         message = (
             "You tried to execute a function call on a WindowSpecification "
@@ -177,11 +188,11 @@ class WindowSpecification(object):
 
         This allows::
 
-            app.['DialogTitle']['ControlTextClass']
+            app['DialogTitle']['ControlTextClass']
 
         to be used to access dialogs and controls.
 
-        Both this and :func:`__getattr__` use the rules outlined in the
+        Both this and :func:`__getattribute__` use the rules outlined in the
         HowTo document.
         """
 
@@ -212,7 +223,7 @@ class WindowSpecification(object):
         return new_item
 
 
-    def __getattr__(self, attr):
+    def __getattribute__(self, attr_name):
         """Attribute access for this class
 
         If we already have criteria for both dialog and control then
@@ -225,13 +236,14 @@ class WindowSpecification(object):
         Otherwise delegate functionality to :func:`__getitem__` - which
         sets the appropriate criteria for the control.
         """
+        if attr_name in ['__dict__', '__members__', '__methods__', '__class__', '__name__']:
+            return object.__getattribute__(self, attr_name)
 
-        # dir (and possibly other code introspection asks for
-        # members like __methods__ and __members__, these are deprecated and I
-         #am not using them so just raise an attribute error immediately
-        if attr.startswith("__") or attr.endswith("__"):
-            raise AttributeError(
-                "Application object has no attribute '%s'"% attr)
+        if attr_name in dir(self.__class__):
+            return object.__getattribute__(self, attr_name)
+
+        if attr_name in self.__dict__:
+            return self.__dict__[attr_name]
 
         from .controls.win32_controls import DialogWrapper
 
@@ -242,20 +254,20 @@ class WindowSpecification(object):
 
             ctrls = _resolve_control(self.criteria)
 
-            return getattr(ctrls[-1], attr)
+            return getattr(ctrls[-1], attr_name)
 
         else:
             # if we have been asked for an attribute of the dialog
             # then resolve the window and return the attribute
-            if len(self.criteria) == 1 and hasattr(DialogWrapper, attr):
+            if len(self.criteria) == 1 and hasattr(DialogWrapper, attr_name):
 
                 ctrls = _resolve_control(self.criteria)
 
-                return getattr(ctrls[-1], attr)
+                return getattr(ctrls[-1], attr_name)
 
         # It is a dialog/control criterion so let getitem
         # deal with it
-        return self[attr]
+        return self[attr_name]
 
 
     def Exists(self, timeout = None, retry_interval = None):
@@ -322,7 +334,7 @@ class WindowSpecification(object):
             else:
                 unique_check_names.update(check_methods)
 
-        # unique_check_names = set(['IsEnabled', 'IsActive', 'IsVisible', 'Exists'])
+        # unique_check_names = set(['is_enabled', 'IsActive', 'is_visible', 'Exists'])
         return unique_check_names, timeout, retry_interval
 
     def __check_all_conditions(self, check_names):
@@ -419,16 +431,16 @@ class WindowSpecification(object):
         ctrls = _resolve_control(
             self.criteria)
 
-        if ctrls[-1].IsDialog():
+        if ctrls[-1].is_dialog():
             # dialog controls are all the control on the dialog
-            dialog_controls = ctrls[-1].Children()
+            dialog_controls = ctrls[-1].children()
 
             ctrls_to_print = dialog_controls[:]
             # filter out hidden controls
             ctrls_to_print = [
-                ctrl for ctrl in ctrls_to_print if ctrl.IsVisible()]
+                ctrl for ctrl in ctrls_to_print if ctrl.is_visible()]
         else:
-            dialog_controls = ctrls[-1].TopLevelParent().Children()
+            dialog_controls = ctrls[-1].top_level_parent().children()
             ctrls_to_print = [ctrls[-1]]
 
         # build the list of disambiguated list of control names
@@ -461,16 +473,16 @@ class WindowSpecification(object):
         ctrls = _resolve_control(
             self.criteria)
 
-        if ctrls[-1].IsDialog():
+        if ctrls[-1].is_dialog():
             # dialog controls are all the control on the dialog
-            dialog_controls = ctrls[-1].Children()
+            dialog_controls = ctrls[-1].children()
 
             ctrls_to_print = dialog_controls[:]
             # filter out hidden controls
             ctrls_to_print = [
-                ctrl for ctrl in ctrls_to_print if ctrl.IsVisible()]
+                ctrl for ctrl in ctrls_to_print if ctrl.is_visible()]
         else:
-            dialog_controls = ctrls[-1].TopLevelParent().Children()
+            dialog_controls = ctrls[-1].top_level_parent().children()
             ctrls_to_print = [ctrls[-1]]
 
         # build the list of disambiguated list of control names
@@ -485,21 +497,21 @@ class WindowSpecification(object):
         for ctrl in ctrls_to_print:
 
             print("{class_name} - '{text}'   {rect}".format(
-                class_name=ctrl.FriendlyClassName(),
-                text=ctrl.WindowText(),
-                rect=str(ctrl.Rectangle())))
+                class_name=ctrl.friendly_class_name(),
+                text=ctrl.window_text(),
+                rect=str(ctrl.rectangle())))
 
             print("\t"),
             names = control_name_map[ctrl]
             names.sort()
             for name in names:
-                print("'{name}'".format(name=name.encode("unicode_escape"))),
+                print("'{0}' ".format(name), end='')
             print()
 
 
 #        for ctrl in ctrls_to_print:
 #            print "%s - '%s'   %s"% (
-#                ctrl.Class(), ctrl.WindowText(), str(ctrl.Rectangle()))
+#                ctrl.class_name(), ctrl.window_text(), str(ctrl.rectangle()))
 #
 #            print "\t",
 #            for text in findbestmatch.get_control_names(
@@ -517,8 +529,8 @@ def _get_ctrl(criteria_):
     # make a copy of the criteria
     criteria = [crit.copy() for crit in criteria_]
     # find the dialog
-    #dialog = backend.ActiveWrapper(findwindows.find_element(**criteria[0]))
-    dialog = BaseWrapper(findwindows.find_element(**criteria[0]))
+    dialog = registry.wrapper_class(findwindows.find_element(**criteria[0]))
+    #dialog = BaseWrapper(findwindows.find_element(**criteria[0]))
 
     ctrl = None
     # if there is only criteria for a dialog then return it
@@ -531,8 +543,8 @@ def _get_ctrl(criteria_):
             ctrl_criteria["parent"] = dialog.handle
 
         # resolve the control and return it
-        #ctrl = backend.ActiveWrapper(findwindows.find_element(**ctrl_criteria))
-        ctrl = BaseWrapper(findwindows.find_element(**ctrl_criteria))
+        ctrl = registry.wrapper_class(findwindows.find_element(**ctrl_criteria))
+        #ctrl = BaseWrapper(findwindows.find_element(**ctrl_criteria))
 
     if ctrl:
         return (dialog, ctrl)
@@ -591,7 +603,7 @@ def _resolve_from_appdata(
 
     dialog_criterion = criteria[0]
     #print list(matched_control)
-    dialog_criterion['class_name'] = matched_control[1]['Class']
+    dialog_criterion['class_name'] = matched_control[1]['class_name']
 
     # find all the windows in the process
     process_elems = findwindows.find_elements(**dialog_criterion)
@@ -600,23 +612,23 @@ def _resolve_from_appdata(
     ctrl = None
     if process_elems:
         similar_child_count = [e for e in process_elems
-            if matched_control[1]['ControlCount'] -2 <=
+            if matched_control[1]['control_count'] -2 <=
                     len(e.children) and
-                matched_control[1]['ControlCount'] +2 >=
+                matched_control[1]['control_count'] +2 >=
                     len(e.children)]
 
         if similar_child_count:
             process_hwnds = similar_child_count
         #else:
         #    print("None Similar child count!!???")
-        #    print(matched_control[1]['ControlCount'], len(handleprops.children(h)))
+        #    print(matched_control[1]['control_count'], len(handleprops.children(h)))
 
         for e in process_elems:
             #print controls.WrapHandle(h).GetProperties()
             #print "======", h, h, h
 
-            #dialog = backend.ActiveWrapper(e)
-            dialog = BaseWrapper(e)
+            dialog = registry.wrapper_class(e)
+            #dialog = BaseWrapper(e)
 
             # if a control was specified also
             if len(criteria_) > 1:
@@ -628,12 +640,12 @@ def _resolve_from_appdata(
 
                 #def has_same_id(other_ctrl):
                 #    print "==="*20
-                #    print "testing", item[2]['ControlID'],
+                #    print "testing", item[2]['control_id'],
                 #    print "against", other_ctrl
-                #    return item[2]['ControlID'] == \
+                #    return item[2]['control_id'] == \
                 #    handleprops.controlid(other_ctrl)
 
-                ctrl_criterion['class_name'] = matched_control[2]['Class']
+                ctrl_criterion['class_name'] = matched_control[2]['class_name']
                 ctrl_criterion['parent'] = dialog.handle
                 ctrl_criterion['top_level_only'] = False
                 #ctrl_criterion['predicate_func'] = has_same_id
@@ -644,14 +656,14 @@ def _resolve_from_appdata(
                     same_ids = \
                         [elem for elem in ctrl_elems
                             if elem.controlId == \
-                                matched_control[2]['ControlID']]
+                                matched_control[2]['control_id']]
 
                     if same_ids:
                         ctrl_elems = same_ids
 
                 try:
-                    #ctrl = backend.ActiveWrapper(ctrl_elems[0])
-                    ctrl = BaseWrapper(ctrl_elems[0])
+                    ctrl = registry.wrapper_class(ctrl_elems[0])
+                    #ctrl = BaseWrapper(ctrl_elems[0])
                 except IndexError:
                     print("-+-+=_" * 20)
                     #print(found_criteria)
@@ -680,11 +692,11 @@ def _resolve_from_appdata(
 ##
 ##        # if best match was specified for the dialog
 ##        # then we need to replace it with other values
-##        # for now we will just use Class
+##        # for now we will just use class_name
 ##        for crit in ['best_match', 'title', 'title_re']:
 ##            if crit in criteria[0]:
 ##                del(criteria[0][crit])
-##                criteria[0]['class_name'] = app_data[0].Class()#['Class']
+##                criteria[0]['class_name'] = app_data[0].class_name()#['class_name']
 ##
 ##            if len(criteria) > 1:
 ##                # find the best match of the application data
@@ -692,15 +704,15 @@ def _resolve_from_appdata(
 ##                    best_match = findbestmatch.find_best_control_matches(
 ##                        criteria[1]['best_match'], app_data)[0]
 ##
-##                    #visible_controls = [ctrl in app_data if ctrl.IsVisible()]
+##                    #visible_controls = [ctrl in app_data if ctrl.is_visible()]
 ##
 ##                    #find the index of the best match item
 ##                    ctrl_index = app_data.index(best_match)
-##                    #print best_match[0].WindowText()
-##                    ctrl_index, best_match.WindowText()
+##                    #print best_match[0].window_text()
+##                    ctrl_index, best_match.window_text()
 ##
 ##                    criteria[1]['ctrl_index'] = ctrl_index -1
-##                    #criteria[1]['class_name'] = best_match.Class()
+##                    #criteria[1]['class_name'] = best_match.class_name()
 ##                    #del(criteria[1]['best_match'])
 ##
 ## One idea here would be to run the new criteria on the app_data dialog and
@@ -777,6 +789,7 @@ class Application(object):
 
         self.match_history = []
         self.use_history = False
+        self.actions = ActionLogger()
 
         # load the match history if a file was specifed
         # and it exists
@@ -791,7 +804,6 @@ class Application(object):
         the .connect().
         Should be also removed in 0.6.X.
         """
-        warnings.simplefilter('always', PendingDeprecationWarning)
         warnings.warn(
             "connect_()/Connect_() methods are deprecated, "
             "please switch to instance method connect(). "
@@ -830,7 +842,6 @@ class Application(object):
             connected = True
 
         elif kwargs:
-            print("tyt")
             self.process = findwindows.find_element(**kwargs).processId
             connected = True
 
@@ -850,7 +861,6 @@ class Application(object):
         calling the .start().
         Should be also removed in 0.6.X.
         """
-        warnings.simplefilter('always', PendingDeprecationWarning)
         warnings.warn(
             "start_()/Start_() methods are deprecated, "
             "please switch to instance method start(). "
@@ -910,7 +920,7 @@ class Application(object):
 
         self.__warn_incorrect_bitness()
 
-        def AppIdle():
+        def app_idle():
             "Return true when the application is ready to start"
             result = win32event.WaitForInputIdle(
                 hProcess, int(timeout * 1000))
@@ -928,7 +938,7 @@ class Application(object):
         if wait_for_idle:
             # Wait until the application is ready after starting it
             try:
-                WaitUntil(timeout, retry_interval, AppIdle)
+                WaitUntil(timeout, retry_interval, app_idle)
             except TimeoutError:
                 pass
 
@@ -939,12 +949,10 @@ class Application(object):
     def __warn_incorrect_bitness(self):
         if self.is64bit() != is_x64_Python():
             if is_x64_Python():
-                warnings.simplefilter('always', UserWarning) # warn each time
                 warnings.warn(
                     "32-bit application should be automated using 32-bit Python (you use 64-bit Python)",
                     UserWarning)
             else:
-                warnings.simplefilter('always', UserWarning) # warn each time
                 warnings.warn(
                     "64-bit application should be automated using 64-bit Python (you use 32-bit Python)",
                     UserWarning)
@@ -1056,8 +1064,8 @@ class Application(object):
         kwargs['process'] = self.process
 
         windows = findwindows.find_elements(**kwargs)
-        #return [backend.ActiveWrapper(win) for win in windows]
-        return [BaseWrapper(win) for win in windows]
+        return [registry.wrapper_class(win) for win in windows]
+        #return [BaseWrapper(win) for win in windows]
 
     Windows_ = windows_
 
@@ -1072,7 +1080,7 @@ class Application(object):
 
         if not self.process:
             win_spec = WindowSpecification(kwargs)
-            self.process = win_spec.WrapperObject().ProcessID()
+            self.process = win_spec.WrapperObject().process_id()
         # add the restriction for this particular process
         else:
             kwargs['process'] = self.process
@@ -1088,18 +1096,20 @@ class Application(object):
         # delegate searching functionality to self.window_()
         return self.window_(best_match = key)
 
-    def __getattr__(self, key):
+    def __getattribute__(self, attr_name):
         "Find the specified dialog of the application"
 
-        # dir (and possibly other code introspection asks for the following
-        # members, these are deprecated and I am not using them so just
-        # raise an attribute error immediately
-        if key.startswith("__") or key.endswith("__"):
-            raise AttributeError(
-                "Application object has no attribute '%s'"% key)
+        if attr_name in ['__dict__', '__members__', '__methods__', '__class__']:
+            return object.__getattribute__(self, attr_name)
+
+        if attr_name in dir(Application):
+            return object.__getattribute__(self, attr_name)
+
+        if attr_name in self.__dict__:
+            return self.__dict__[attr_name]
 
         # delegate all functionality to item access
-        return self[key]
+        return self[attr_name]
 
     def WriteAppData(self, filename):
         "Should not be used - part of application data implementation"
@@ -1124,17 +1134,19 @@ class Application(object):
 
         for win in windows:
 
-            win.SendMessageTimeout(
-                win32defines.WM_QUERYENDSESSION,
-                timeout = .5,
-                timeoutflags = (win32defines.SMTO_ABORTIFHUNG)) # |
-                    #win32defines.SMTO_NOTIMEOUTIFNOTHUNG)) # |
-                    #win32defines.SMTO_BLOCK)
+            if hasattr(win, 'SendMessageTimeout'):
+                win.SendMessageTimeout(
+                    win32defines.WM_QUERYENDSESSION,
+                    timeout = .5,
+                    timeoutflags = (win32defines.SMTO_ABORTIFHUNG)) # |
+                        #win32defines.SMTO_NOTIMEOUTIFNOTHUNG)) # |
+                        #win32defines.SMTO_BLOCK)
 
             try:
-                win.Close()
+                if hasattr(win, 'Close'):
+                    win.Close()
             except TimeoutError:
-                pass
+                self.actions.log('Failed to close top level window')
 
         # window has let us know that it doesn't want to die - so we abort
         # this means that the app is not hung - but knows it doesn't want
@@ -1233,7 +1245,6 @@ def _warn_incorrect_binary_bitness(exe_name):
     "warn if executable is of incorrect bitness"
     if os.path.isabs(exe_name) and os.path.isfile(exe_name):
         if handleprops.is64bitbinary(exe_name) and not is_x64_Python():
-            warnings.simplefilter('always', UserWarning) # warn for every 32-bit binary
             warnings.warn(
                 "64-bit binary from 32-bit Python may work incorrectly (please use 64-bit Python instead)",
                 UserWarning, stacklevel=2)

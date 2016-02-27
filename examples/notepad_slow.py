@@ -45,7 +45,7 @@ Timings.Slow()
 
 #application.set_timing(3, .5, 10, .5, .4, .2, .2, .1, .2, .5)
 
-def RunNotepad():
+def run_notepad():
     "Run notepad and do some small stuff with it"
 
     start = time.time()
@@ -195,11 +195,11 @@ def RunNotepad():
     #app.PopupMenu.MenuSelect("Insert Unicode control character -> IAFS", app.Notepad.ctrl_())
     #time.sleep(1)
 
-    #app.Notepad.Edit.TypeKeys("{ESC}")
+    #app.Notepad.Edit.type_keys("{ESC}")
 
     # the following shows that Sendtext does not accept
     # accented characters - but does allow 'control' characters
-    app.Notepad.Edit.TypeKeys("{END}{ENTER}SendText d\xf6\xe9s  "
+    app.Notepad.Edit.type_keys("{END}{ENTER}SendText d\xf6\xe9s  "
         u"s\xfcpp\xf4rt \xe0cce\xf1ted characters!!!", with_spaces = True)
 
     # Try and save
@@ -240,4 +240,4 @@ def RunNotepad():
     print("That took %.3f to run"% (time.time() - start))
 
 if __name__ == "__main__":
-    RunNotepad()
+    run_notepad()

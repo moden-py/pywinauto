@@ -19,7 +19,7 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-"""Provides functions for iterating and finding windows
+"""Provides functions for iterating and finding windows/elements
 
 """
 from __future__ import unicode_literals
@@ -34,8 +34,7 @@ from . import win32structures
 from . import handleprops
 from . import findbestmatch
 from . import controls
-from . import backend
-from .controls.BaseWrapper import BaseWrapper
+from .backend import registry
 
 if sysinfo.UIA_support:
     from .UIAElementInfo import UIAElementInfo, _UIA_dll, _iuia, _treeScope
@@ -128,16 +127,16 @@ def find_elements(class_name = None,
     # allow a handle to be passed in
     # if it is present - just return it
     if handle is not None:
-        return [backend.ActiveElementInfo(handle), ]
+        return [registry.active_backend.element_info_class(handle), ]
 
     # check if parent is a handle of element (in case of searching native controls)
     if parent:
         if isinstance(parent, six.integer_types):
-            parent = backend.ActiveElementInfo(parent)
+            parent = registry.active_backend.element_info_class(parent)
 
     if top_level_only:
         # find the top level elements
-        elements = backend.ActiveElementInfo().children # root.children == enum_windows()
+        elements = registry.active_backend.element_info_class().children # root.children == enum_windows()
 
         # if we have been given a parent
         if parent:
@@ -147,7 +146,7 @@ def find_elements(class_name = None,
     else:
         # if not given a parent look for all children of the desktop
         if not parent:
-            parent = backend.ActiveElementInfo()
+            parent = registry.active_backend.element_info_class()
 
         # look for ALL children of that parent
         elements = parent.descendants
@@ -227,8 +226,8 @@ def find_elements(class_name = None,
                 # TODO: can't skip invalid handles because UIA element can have no handle
                 # TODO: use className check for this ?
                 if elem.className:
-                    #wrapped_elems.append(backend.ActiveWrapper(elem))
-                    wrapped_elems.append(BaseWrapper(elem))
+                    wrapped_elems.append(registry.wrapper_class(elem))
+                    #wrapped_elems.append(BaseWrapper(elem))
             except (controls.InvalidWindowHandle,
                     controls.InvalidElement):
                 # skip invalid handles - they have dissapeared
@@ -241,9 +240,9 @@ def find_elements(class_name = None,
         elements = []
         for elem in backup_elements:
             if hasattr(elem, "_elementInfo"):
-                elements.append(elem.elementInfo)
+                elements.append(elem.element_info)
             else:
-                elements.append(backend.ActiveElementInfo(elem.handle))
+                elements.append(registry.active_backend.element_info_class(elem.handle))
 
     if predicate_func is not None:
         elements = [elem for elem in elements if predicate_func(elem)]
@@ -267,17 +266,17 @@ def enum_windows():
 
     # The callback function that will be called for each HWND
     # all we do is append the wrapped handle
-    def EnumWindowProc(hwnd, lparam):
+    def enum_window_proc(hwnd, lparam):
         "Called for each window - adds handles to a list"
         windows.append(hwnd)
         return True
 
     # define the type of the child procedure
-    enum_win_proc = ctypes.WINFUNCTYPE(
+    enum_win_proc_t = ctypes.WINFUNCTYPE(
         ctypes.c_int, ctypes.c_long, ctypes.c_long)
 
     # 'construct' the callback with our function
-    proc = enum_win_proc(EnumWindowProc)
+    proc = enum_win_proc_t(enum_window_proc)
 
     # loop over all the children (callback called for each)
     win32functions.EnumWindows(proc, 0)
